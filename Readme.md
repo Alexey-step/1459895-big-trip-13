@@ -1,8 +1,7 @@
 # Проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
-* Студент: [Неопознанный енот](https://up.htmlacademy.ru/ecmascript/13/user/1459895).
-* Наставник: `Неизвестно`.
-
+* Студент: [Алексей Степанов](https://up.htmlacademy.ru/ecmascript/13/user/1459895).
+* Наставник: [Артём Мязитов](https://up.htmlacademy.ru/ecmascript/13/user/1164307).
 ---
 
 _Не удаляйте и не изменяйте папки и файлы:_
