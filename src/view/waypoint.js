@@ -7,8 +7,8 @@ const createOfferTemplate = () => {
   const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
   const offerTitleClone = [].concat(offerTitle);
   for (let i = 0; i < offerCount; i++) {
-    let offerTitleValue = getUniqueItem(offerTitleClone);
-    let offerPriceValue = getRandomInteger(offerPrice.MIN, offerPrice.MAX);
+    const offerTitleValue = getUniqueItem(offerTitleClone);
+    const offerPriceValue = getRandomInteger(offerPrice.MIN, offerPrice.MAX);
     arr.push(`<li class="event__offer">
     <span class="event__offer-title">${offerTitleValue}</span>
     &plus;&euro;&nbsp;
@@ -51,6 +51,14 @@ const createDateEndTemplate = (dateStart, dateEnd) => {
   return dateEndTime;
 };
 
+const createPhotoTemplate = (items) => {
+  let arr = [];
+  for (let i = 0; i < items.length; i++) {
+    arr.push(`<img class="event__type-icon" width="42" height="42" src="${items[i]}" alt="Event type icon">`);
+  }
+  return arr.join(``);
+};
+
 export const createWaypointTemplate = (waypoint) => {
 
   const {dateStart, dateEnd, type, destination, date, price, photos, isFavorite} = waypoint;
@@ -63,11 +71,13 @@ export const createWaypointTemplate = (waypoint) => {
 
   const duration = createTravelTimeTemplate(dateEndTime, dateStart);
 
+  const photosTemplate = createPhotoTemplate(photos);
+
   return `<li class="trip-events__item">
   <div class="event">
     <time class="event__date" datetime="2019-03-18">${date.format(`D MMM`)}</time>
     <div class="event__type">
-      <img class="event__type-icon" width="42" height="42" src="${photos}" alt="Event type icon">
+      ${photosTemplate}
     </div>
     <h3 class="event__title">${type} ${destination}</h3>
     <div class="event__schedule">

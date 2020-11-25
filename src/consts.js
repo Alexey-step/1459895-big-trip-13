@@ -74,6 +74,11 @@ const DESCRIPTION = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
+const photosCount = {
+  MIN: 1,
+  MAX: 5
+};
+
 export {
   OFFER_KEYS,
   offersCount,
@@ -85,5 +90,6 @@ export {
   DESCRIPTION_MAX_LENGTH,
   timeHours,
   timeMinutes,
-  DESCRIPTION
+  DESCRIPTION,
+  photosCount
 };

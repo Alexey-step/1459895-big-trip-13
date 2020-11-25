@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import {getRandomInteger, getRandomElement, getUniqueItem} from "./../util";
-import {WAYPOINT_TYPE, DESTINATION, PRICE, DESCRIPTION_MAX_LENGTH, timeHours, timeMinutes, DESCRIPTION} from "./../consts.js";
+import {WAYPOINT_TYPE, DESTINATION, PRICE, DESCRIPTION_MAX_LENGTH, timeHours, timeMinutes, DESCRIPTION, photosCount} from "./../consts.js";
 
 const createRandomString = (items) => {
   let arr = [];
@@ -26,6 +26,16 @@ const generateDate = () => {
   return dayjs().add(daysGap, `day`);
 };
 
+const createPhotosArray = () => {
+  const arr = [];
+  const count = getRandomInteger(photosCount.MIN, photosCount.MAX);
+  for (let i = 0; i < count; i++) {
+    const photo = `http://picsum.photos/248/152?r=${Math.random()}`;
+    arr.push(photo);
+  }
+  return arr;
+};
+
 export const generateWaypoint = () => {
   return {
     dateStart: getRandomTime(),
@@ -33,7 +43,7 @@ export const generateWaypoint = () => {
     type: getRandomElement(WAYPOINT_TYPE),
     destination: getRandomElement(DESTINATION),
     description: createRandomString(DESCRIPTION),
-    photos: `http://picsum.photos/248/152?r=${Math.random()}`,
+    photos: createPhotosArray(),
     date: generateDate(),
     price: getRandomInteger(PRICE.MIN, PRICE.MAX),
     isFavorite: Boolean(getRandomInteger(0, 1))

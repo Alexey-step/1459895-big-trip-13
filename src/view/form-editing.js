@@ -32,8 +32,8 @@ const createOfferEditTemplate = () => {
   const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
   const offerTitleClone = [].concat(offerTitle);
   for (let i = 0; i < offerCount; i++) {
-    let offerTitleValue = getUniqueItem(offerTitleClone);
-    let offerPriceValue = getRandomInteger(offerPrice.MIN, offerPrice.MAX);
+    const offerTitleValue = getUniqueItem(offerTitleClone);
+    const offerPriceValue = getRandomInteger(offerPrice.MIN, offerPrice.MAX);
     arr.push(`<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${getRandomInteger(0, 1) === 1 ? `checked` : ``}>
     <label class="event__offer-label" for="event-offer-luggage-${i}">

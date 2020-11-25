@@ -6,11 +6,11 @@ export const getRandomInteger = (a = 0, b = 1) => {
 };
 
 export const getRandomElement = (items) => {
-  return items[Math.floor(Math.random() * items.length)];
+  return items[getRandomInteger(0, items.length - 1)];
 };
 
 export const getUniqueItem = (items) => {
-  let b = getRandomElement(items);
+  const b = getRandomElement(items);
   items.splice(items.indexOf(b), 1);
   return b;
 };
