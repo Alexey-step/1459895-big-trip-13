@@ -1,4 +1,4 @@
-import {getRandomInteger, getUniqueItem} from "./../util";
+import {getRandomInteger, getUniqueItem, getTimeInfo} from "./../util";
 import {OFFER_KEYS, offersCount, offerTitle, offerPrice} from "./../consts.js";
 import {timeHours, timeMinutes} from "./../consts.js";
 
@@ -18,31 +18,7 @@ const createOfferTemplate = () => {
   return arr.join(``);
 };
 
-const createTravelTimeTemplate = (dateEnd, dateStart) => {
-  let timeStr = ``;
-  let day;
-  let hour;
-  let minute = dateEnd.diff(dateStart, `m`);
-  if (minute < 0) {
-    minute = minute * -1;
-  }
-  if (minute > 1440) {
-    day = Math.floor(minute / 1440);
-    hour = Math.floor((minute - day * 1440) / 60);
-    minute = minute - ((minute - day * 1440) % 60);
-    timeStr = `${day}D ${hour}H ${minute}M`;
-  } else if (minute >= 60 && minute < 1440) {
-    hour = Math.floor(minute / 60);
-    minute = minute - hour * 60;
-    timeStr = `${hour}H ${minute}M`;
-  } else if (minute > 0 && minute < 60) {
-    minute = minute;
-    timeStr = `${minute}M`;
-  }
-  return timeStr;
-};
-
-const createDateEndTemplate = (dateStart, dateEnd) => {
+const getDateEnd = (dateStart, dateEnd) => {
   const hoursGap = getRandomInteger(timeHours.MIN, timeHours.MAX);
   const minuteGap = getRandomInteger(timeMinutes.MIN, timeMinutes.MAX);
 
@@ -51,33 +27,23 @@ const createDateEndTemplate = (dateStart, dateEnd) => {
   return dateEndTime;
 };
 
-const createPhotoTemplate = (items) => {
-  let arr = [];
-  for (let i = 0; i < items.length; i++) {
-    arr.push(`<img class="event__type-icon" width="42" height="42" src="${items[i]}" alt="Event type icon">`);
-  }
-  return arr.join(``);
-};
-
 export const createWaypointTemplate = (waypoint) => {
 
-  const {dateStart, dateEnd, type, destination, date, price, photos, isFavorite} = waypoint;
+  const {dateStart, dateEnd, type, destination, date, price, isFavorite} = waypoint;
 
   const offerTemplate = OFFER_KEYS.includes(type) ? createOfferTemplate() : ``;
 
-  const dateEndTime = createDateEndTemplate(dateStart, dateEnd);
+  const dateEndTime = getDateEnd(dateStart, dateEnd);
 
   const favoriteBtnActive = isFavorite ? `event__favorite-btn--active` : ``;
 
-  const duration = createTravelTimeTemplate(dateEndTime, dateStart);
-
-  const photosTemplate = createPhotoTemplate(photos);
+  const duration = getTimeInfo(dateEndTime, dateStart);
 
   return `<li class="trip-events__item">
   <div class="event">
     <time class="event__date" datetime="2019-03-18">${date.format(`D MMM`)}</time>
     <div class="event__type">
-      ${photosTemplate}
+    <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
     </div>
     <h3 class="event__title">${type} ${destination}</h3>
     <div class="event__schedule">

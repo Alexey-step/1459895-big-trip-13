@@ -21,10 +21,7 @@ const createTypeTemplate = (item) => {
 };
 
 const createDescriptionTemplate = (item, destination) => {
-  return `<section class="event__section  event__section--destination">
- <h3 class="event__section-title  event__section-title--destination">Destination</h3>
- <p class="event__destination-description">${destination !== null ? item : ``}</p>
-</section>`;
+  return `<p class="event__destination-description">${destination !== null ? item : ``}</p>`;
 };
 
 const createOfferEditTemplate = () => {
@@ -46,6 +43,14 @@ const createOfferEditTemplate = () => {
   return arr.join(``);
 };
 
+const createPhotoTemplate = (items) => {
+  let arr = [];
+  for (let i = 0; i < items.length; i++) {
+    arr.push(`<img width="80" height="80" src="${items[i]}" alt="">`);
+  }
+  return arr.join(``);
+};
+
 export const createFormEditingTemplate = (waypoint = {}) => {
 
   const {type, destination, price, photos, description} = waypoint;
@@ -54,6 +59,7 @@ export const createFormEditingTemplate = (waypoint = {}) => {
   const typeTemplate = createTypeTemplate(type);
   const offerEditTemplate = OFFER_KEYS.includes(type) ? createOfferEditTemplate() : ``;
   const dateTemplate = createDateTemplate(waypoint);
+  const photosTemplate = createPhotoTemplate(photos);
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -61,7 +67,7 @@ export const createFormEditingTemplate = (waypoint = {}) => {
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="${photos !== null ? photos : ``}" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
         <div class="event__type-list">
@@ -108,8 +114,11 @@ export const createFormEditingTemplate = (waypoint = {}) => {
           ${offerEditTemplate}
         </div>
       </section>
-
-      ${descriptionTemplate}
+      <section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        ${descriptionTemplate}
+        ${photosTemplate}
+     </section>
     </section>
   </form>
 </li>`;
