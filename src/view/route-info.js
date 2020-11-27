@@ -1,3 +1,4 @@
+import {createElement} from "./../util.js";
 
 const getRouteInfo = (items) => {
   let destinationStr = `${items[0].destination}`;
@@ -15,7 +16,7 @@ const createRouteDateTemplate = (items) => {
   return `<p class="trip-info__dates">${items[0].date.format(`MMM DD`)}&nbsp;&mdash;&nbsp;${items[items.length - 1].date.format(`DD`)}</p>`;
 };
 
-export const createRouteInfoTemplate = (items) => {
+const createRouteInfoTemplate = (items) => {
 
   const routeInfoTemplate = getRouteInfo(items);
   const dateTemplate = createRouteDateTemplate(items);
@@ -28,3 +29,26 @@ export const createRouteInfoTemplate = (items) => {
   </div>
 </section>`;
 };
+
+export default class RouteInfoView {
+  constructor(waypoint) {
+    this._waypoint = waypoint;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createRouteInfoTemplate(this._waypoint);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

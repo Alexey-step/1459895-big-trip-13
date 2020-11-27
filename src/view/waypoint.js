@@ -1,4 +1,4 @@
-import {getRandomInteger, getUniqueItem, getTimeInfo} from "./../util";
+import {getRandomInteger, getUniqueItem, getTimeInfo, createElement} from "./../util";
 import {OFFER_KEYS, offersCount, offerTitle, offerPrice} from "./../consts.js";
 import {timeHours, timeMinutes} from "./../consts.js";
 
@@ -27,7 +27,7 @@ const getDateEnd = (dateStart, dateEnd) => {
   return dateEndTime;
 };
 
-export const createWaypointTemplate = (waypoint) => {
+const createWaypointTemplate = (waypoint) => {
 
   const {dateStart, dateEnd, type, destination, date, price, isFavorite} = waypoint;
 
@@ -72,3 +72,27 @@ export const createWaypointTemplate = (waypoint) => {
   </div>
 </li>`;
 };
+
+export default class WaypointView {
+  constructor(waypoint) {
+    this._waypoint = waypoint;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createWaypointTemplate(this._waypoint);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
