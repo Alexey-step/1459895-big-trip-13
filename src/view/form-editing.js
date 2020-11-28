@@ -1,4 +1,4 @@
-import {getRandomInteger, getUniqueItem} from "./../util";
+import {getRandomInteger, getUniqueItem, createElement} from "./../util";
 import {offersCount, offerTitle, offerPrice, OFFER_KEYS, WAYPOINT_TYPE} from "./../consts.js";
 
 const createDateTemplate = (item) => {
@@ -51,7 +51,7 @@ const createPhotoTemplate = (items) => {
   return arr.join(``);
 };
 
-export const createFormEditingTemplate = (waypoint = {}) => {
+const createFormEditingTemplate = (waypoint) => {
 
   const {type, destination, price, photos, description} = waypoint;
 
@@ -123,3 +123,26 @@ export const createFormEditingTemplate = (waypoint = {}) => {
   </form>
 </li>`;
 };
+
+export default class FormEditingView {
+  constructor(waypoint) {
+    this._waypoint = waypoint;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFormEditingTemplate(this._waypoint);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
