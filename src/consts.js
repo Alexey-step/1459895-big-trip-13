@@ -17,8 +17,12 @@ const offerTitle = [
   `Order Uber`,
   `Rent a Car`,
   `Add breakfast`,
-  `Book tockets`,
-  `Lunch in city`
+  `Book tickets`,
+  `Lunch in city`,
+  `Uber, buisness`,
+  `Uber, comfort`,
+  `Car with driver`,
+  `Buy map`
 ];
 
 const offerPrice = {
@@ -79,6 +83,11 @@ const photosCount = {
   MAX: 5
 };
 
+const minutes = {
+  IN_DAY: 1440,
+  IN_HOUR: 60
+};
+
 export {
   OFFER_KEYS,
   offersCount,
@@ -91,5 +100,6 @@ export {
   timeHours,
   timeMinutes,
   DESCRIPTION,
-  photosCount
+  photosCount,
+  minutes
 };

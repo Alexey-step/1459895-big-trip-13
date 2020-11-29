@@ -1,5 +1,5 @@
-import {getRandomInteger, getUniqueItem, createElement} from "./../util";
-import {offersCount, offerTitle, offerPrice, OFFER_KEYS, WAYPOINT_TYPE} from "./../consts.js";
+import {createElement} from "./../util";
+import {OFFER_KEYS, WAYPOINT_TYPE} from "./../consts.js";
 
 const createDateTemplate = (item) => {
   return `<div class="event__field-group  event__field-group--time">
@@ -24,21 +24,17 @@ const createDescriptionTemplate = (item, destination) => {
   return `<p class="event__destination-description">${destination !== null ? item : ``}</p>`;
 };
 
-const createOfferEditTemplate = () => {
-  const arr = [];
-  const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
-  const offerTitleClone = [].concat(offerTitle);
-  for (let i = 0; i < offerCount; i++) {
-    const offerTitleValue = getUniqueItem(offerTitleClone);
-    const offerPriceValue = getRandomInteger(offerPrice.MIN, offerPrice.MAX);
+const createOfferEditTemplate = (item) => {
+  let arr = [];
+  for (let i = 0; i < item.length; i++) {
     arr.push(`<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${getRandomInteger(0, 1) === 1 ? `checked` : ``}>
-    <label class="event__offer-label" for="event-offer-luggage-${i}">
-      <span class="event__offer-title">${offerTitleValue}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offerPriceValue}</span>
-    </label>
-  </div>`);
+         <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${item[i].check ? `checked` : ``}>
+         <label class="event__offer-label" for="event-offer-luggage-${i}">
+           <span class="event__offer-title">${item[i].title}</span>
+           &plus;&euro;&nbsp;
+           <span class="event__offer-price">${item[i].price}</span>
+         </label>
+       </div>`);
   }
   return arr.join(``);
 };
@@ -53,11 +49,11 @@ const createPhotoTemplate = (items) => {
 
 const createFormEditingTemplate = (waypoint) => {
 
-  const {type, destination, price, photos, description} = waypoint;
+  const {type, destination, price, photos, description, offers} = waypoint;
 
   const descriptionTemplate = createDescriptionTemplate(description, destination);
   const typeTemplate = createTypeTemplate(type);
-  const offerEditTemplate = OFFER_KEYS.includes(type) ? createOfferEditTemplate() : ``;
+  const offerEditTemplate = OFFER_KEYS.includes(type) ? createOfferEditTemplate(offers) : ``;
   const dateTemplate = createDateTemplate(waypoint);
   const photosTemplate = createPhotoTemplate(photos);
 

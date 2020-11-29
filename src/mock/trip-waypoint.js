@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {getRandomInteger, getRandomElement, getUniqueItem} from "./../util";
+import {getRandomInteger, getRandomElement, getUniqueItem, getRandomOffers} from "./../util";
 import {WAYPOINT_TYPE, DESTINATION, PRICE, DESCRIPTION_MAX_LENGTH, timeHours, timeMinutes, DESCRIPTION, photosCount} from "./../consts.js";
 
 const createRandomString = (items) => {
@@ -46,6 +46,7 @@ export const generateWaypoint = () => {
     photos: createPhotosArray(),
     date: generateDate(),
     price: getRandomInteger(PRICE.MIN, PRICE.MAX),
-    isFavorite: Boolean(getRandomInteger(0, 1))
+    isFavorite: Boolean(getRandomInteger(0, 1)),
+    offers: getRandomOffers()
   };
 };
