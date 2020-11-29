@@ -1,3 +1,5 @@
+import {offersCount, offerTitle, offerPrice, minutes} from "./consts.js";
+
 export const renderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
@@ -46,18 +48,34 @@ export const getTimeInfo = (dateEnd, dateStart) => {
   if (minute < 0) {
     minute = minute * -1;
   }
-  if (minute > 1440) {
-    day = Math.floor(minute / 1440);
-    hour = Math.floor((minute - day * 1440) / 60);
-    minute = minute - ((minute - day * 1440) % 60);
+  if (minute > minutes.IN_DAY) {
+    day = Math.floor(minute / minutes.IN_DAY);
+    hour = Math.floor((minute - day * minutes.IN_DAY) / minutes.IN_HOUR);
+    minute = minute - ((minute - day * minutes.IN_DAY) % minutes.IN_HOUR);
     timeStr = `${day}D ${hour}H ${minute}M`;
-  } else if (minute >= 60 && minute < 1440) {
-    hour = Math.floor(minute / 60);
-    minute = minute - hour * 60;
+  } else if (minute >= minutes.IN_HOUR && minute < minutes.IN_DAY) {
+    hour = Math.floor(minute / minutes.IN_HOUR);
+    minute = minute - hour * minutes.IN_HOUR;
     timeStr = `${hour}H ${minute}M`;
-  } else if (minute > 0 && minute < 60) {
+  } else if (minute > 0 && minute < minutes.IN_HOUR) {
     minute = minute;
     timeStr = `${minute}M`;
   }
   return timeStr;
+};
+
+export const getRandomOffers = () => {
+  let offersArr = [];
+  let offer = {};
+  const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
+  const offerTitleClone = [].concat(offerTitle);
+  for (let i = 0; i < offerCount; i++) {
+    offer = {
+      title: getUniqueItem(offerTitleClone),
+      price: getRandomInteger(offerPrice.MIN, offerPrice.MAX),
+      check: Boolean(getRandomInteger(0, 1))
+    };
+    offersArr.push(offer);
+  }
+  return offersArr;
 };

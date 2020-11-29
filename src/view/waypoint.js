@@ -1,19 +1,17 @@
-import {getRandomInteger, getUniqueItem, getTimeInfo, createElement} from "./../util";
-import {OFFER_KEYS, offersCount, offerTitle, offerPrice} from "./../consts.js";
+import {getRandomInteger, getTimeInfo, createElement} from "./../util";
+import {OFFER_KEYS} from "./../consts.js";
 import {timeHours, timeMinutes} from "./../consts.js";
 
-const createOfferTemplate = () => {
-  const arr = [];
-  const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
-  const offerTitleClone = [].concat(offerTitle);
-  for (let i = 0; i < offerCount; i++) {
-    const offerTitleValue = getUniqueItem(offerTitleClone);
-    const offerPriceValue = getRandomInteger(offerPrice.MIN, offerPrice.MAX);
-    arr.push(`<li class="event__offer">
-    <span class="event__offer-title">${offerTitleValue}</span>
-    &plus;&euro;&nbsp;
-    <span class="event__offer-price">${offerPriceValue}</span>
-  </li>`);
+const createOfferTemplate = (item) => {
+  let arr = [];
+  for (let i = 0; i < item.length; i++) {
+    if (item[i].check) {
+      arr.push(`<li class="event__offer">
+           <span class="event__offer-title">${item[i].title}</span>
+           &plus;&euro;&nbsp;
+           <span class="event__offer-price">${item[i].price}</span>
+         </li>`);
+    }
   }
   return arr.join(``);
 };
@@ -29,9 +27,9 @@ const getDateEnd = (dateStart, dateEnd) => {
 
 const createWaypointTemplate = (waypoint) => {
 
-  const {dateStart, dateEnd, type, destination, date, price, isFavorite} = waypoint;
+  const {dateStart, dateEnd, type, destination, date, price, isFavorite, offers} = waypoint;
 
-  const offerTemplate = OFFER_KEYS.includes(type) ? createOfferTemplate() : ``;
+  const offerTemplate = OFFER_KEYS.includes(type) ? createOfferTemplate(offers) : ``;
 
   const dateEndTime = getDateEnd(dateStart, dateEnd);
 
@@ -95,4 +93,3 @@ export default class WaypointView {
     this._element = null;
   }
 }
-
