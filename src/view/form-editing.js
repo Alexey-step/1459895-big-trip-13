@@ -1,5 +1,5 @@
-import {createElement} from "./../util";
 import {OFFER_KEYS, WAYPOINT_TYPE} from "./../consts.js";
+import Abstract from "./abstract.js";
 
 const createDateTemplate = (item) => {
   return `<div class="event__field-group  event__field-group--time">
@@ -41,9 +41,9 @@ const createOfferEditTemplate = (item) => {
 
 const createPhotoTemplate = (items) => {
   let arr = [];
-  for (let i = 0; i < items.length; i++) {
-    arr.push(`<img width="80" height="80" src="${items[i]}" alt="">`);
-  }
+  items.forEach((item) => {
+    arr.push(`<img width="80" height="80" src="${item}" alt="">`);
+  });
   return arr.join(``);
 };
 
@@ -120,25 +120,35 @@ const createFormEditingTemplate = (waypoint) => {
 </li>`;
 };
 
-export default class FormEditingView {
+export default class FormEditingView extends Abstract {
   constructor(waypoint) {
+    super();
     this._waypoint = waypoint;
-    this._element = null;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFormEditingTemplate(this._waypoint);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
   }
 }

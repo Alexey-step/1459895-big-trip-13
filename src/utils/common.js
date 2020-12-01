@@ -1,44 +1,4 @@
-import {offersCount, offerTitle, offerPrice, minutes} from "./consts.js";
-
-export const renderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
-};
-
-export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-export const render = (container, element, place) => {
-  switch (place) {
-    case renderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case renderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
-
-export const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-export const getRandomElement = (items) => {
-  return items[getRandomInteger(0, items.length - 1)];
-};
-
-export const getUniqueItem = (items) => {
-  const b = getRandomElement(items);
-  items.splice(items.indexOf(b), 1);
-  return b;
-};
+import {offersCount, offerTitle, offerPrice, minutes} from "./../consts.js";
 
 export const getTimeInfo = (dateEnd, dateStart) => {
   let timeStr = ``;
@@ -78,4 +38,28 @@ export const getRandomOffers = () => {
     offersArr.push(offer);
   }
   return offersArr;
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export const getRandomInteger = (a = 0, b = 1) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
+
+export const getRandomElement = (items) => {
+  return items[getRandomInteger(0, items.length - 1)];
+};
+
+export const getUniqueItem = (items) => {
+  const b = getRandomElement(items);
+  items.splice(items.indexOf(b), 1);
+  return b;
 };

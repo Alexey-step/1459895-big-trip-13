@@ -1,18 +1,18 @@
-import {getRandomInteger, getTimeInfo, createElement} from "./../util";
-import {OFFER_KEYS} from "./../consts.js";
-import {timeHours, timeMinutes} from "./../consts.js";
+import {getRandomInteger, getTimeInfo} from "./../utils/common.js";
+import {timeHours, timeMinutes, OFFER_KEYS} from "./../consts.js";
+import Abstract from "./abstract.js";
 
-const createOfferTemplate = (item) => {
+const createOfferTemplate = (items) => {
   let arr = [];
-  for (let i = 0; i < item.length; i++) {
-    if (item[i].check) {
+  items.forEach((item) => {
+    if (item.check) {
       arr.push(`<li class="event__offer">
-           <span class="event__offer-title">${item[i].title}</span>
+           <span class="event__offer-title">${item.title}</span>
            &plus;&euro;&nbsp;
-           <span class="event__offer-price">${item[i].price}</span>
+           <span class="event__offer-price">${item.price}</span>
          </li>`);
     }
-  }
+  });
   return arr.join(``);
 };
 
@@ -71,25 +71,24 @@ const createWaypointTemplate = (waypoint) => {
 </li>`;
 };
 
-export default class WaypointView {
+export default class WaypointView extends Abstract {
   constructor(waypoint) {
+    super();
     this._waypoint = waypoint;
-    this._element = null;
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createWaypointTemplate(this._waypoint);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
   }
 }

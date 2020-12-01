@@ -1,4 +1,4 @@
-import {createElement} from "./../util.js";
+import Abstract from "./abstract.js";
 
 const getRouteInfo = (items) => {
   let destinationStr = `${items[0].destination}`;
@@ -30,25 +30,13 @@ const createRouteInfoTemplate = (items) => {
 </section>`;
 };
 
-export default class RouteInfoView {
+export default class RouteInfoView extends Abstract {
   constructor(waypoint) {
+    super();
     this._waypoint = waypoint;
-    this._element = null;
   }
 
   getTemplate() {
     return createRouteInfoTemplate(this._waypoint);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
