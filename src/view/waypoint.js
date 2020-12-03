@@ -3,17 +3,14 @@ import {timeHours, timeMinutes, OFFER_KEYS} from "./../consts.js";
 import Abstract from "./abstract.js";
 
 const createOfferTemplate = (items) => {
-  let arr = [];
-  items.forEach((item) => {
-    if (item.check) {
-      arr.push(`<li class="event__offer">
-           <span class="event__offer-title">${item.title}</span>
-           &plus;&euro;&nbsp;
-           <span class="event__offer-price">${item.price}</span>
-         </li>`);
-    }
+  const offerTemplate = items.map((item) => {
+    return item.check ? `<li class="event__offer">
+        <span class="event__offer-title">${item.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${item.price}</span>
+      </li>` : ``;
   });
-  return arr.join(``);
+  return offerTemplate.join(``);
 };
 
 const getDateEnd = (dateStart, dateEnd) => {

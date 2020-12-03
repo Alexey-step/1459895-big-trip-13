@@ -24,27 +24,31 @@ const createDescriptionTemplate = (item, destination) => {
   return `<p class="event__destination-description">${destination !== null ? item : ``}</p>`;
 };
 
-const createOfferEditTemplate = (item) => {
-  let arr = [];
-  for (let i = 0; i < item.length; i++) {
-    arr.push(`<div class="event__offer-selector">
-         <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${item[i].check ? `checked` : ``}>
+const createOfferEditTemplate = (items) => {
+  const offerEditTemplate = items.map((item, i) => {
+    return `<div class="event__offer-selector">
+         <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${item.check ? `checked` : ``}>
          <label class="event__offer-label" for="event-offer-luggage-${i}">
-           <span class="event__offer-title">${item[i].title}</span>
+           <span class="event__offer-title">${item.title}</span>
            &plus;&euro;&nbsp;
-           <span class="event__offer-price">${item[i].price}</span>
+           <span class="event__offer-price">${item.price}</span>
          </label>
-       </div>`);
-  }
-  return arr.join(``);
+       </div>`;
+  });
+  return `<section class="event__section  event__section--offers">
+  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+  <div class="event__available-offers">
+    ${offerEditTemplate.join(``)}
+  </div>
+</section>`;
 };
 
 const createPhotoTemplate = (items) => {
-  let arr = [];
-  items.forEach((item) => {
-    arr.push(`<img width="80" height="80" src="${item}" alt="">`);
+  const photoTemplate = items.map((item) => {
+    return `<img width="80" height="80" src="${item}" alt="">`;
   });
-  return arr.join(``);
+  return photoTemplate.join(``);
 };
 
 const createFormEditingTemplate = (waypoint) => {
@@ -103,13 +107,7 @@ const createFormEditingTemplate = (waypoint) => {
       </button>
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-          ${offerEditTemplate}
-        </div>
-      </section>
+      ${offerEditTemplate}
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         ${descriptionTemplate}
