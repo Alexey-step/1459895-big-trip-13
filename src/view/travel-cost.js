@@ -1,4 +1,4 @@
-import {createElement} from "./../util.js";
+import Abstract from "./abstract.js";
 
 const createTravelCostTemplate = (items) => {
 
@@ -9,26 +9,14 @@ const createTravelCostTemplate = (items) => {
 </p>`;
 };
 
-export default class TravelCostView {
+export default class TravelCostView extends Abstract {
   constructor(waypoint) {
+    super();
     this._waypoint = waypoint;
-    this._element = null;
   }
 
   getTemplate() {
     return createTravelCostTemplate(this._waypoint);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {getRandomInteger, getRandomElement, getUniqueItem, getRandomOffers} from "./../util";
+import {getRandomInteger, getRandomElement, getUniqueItem, getRandomOffers} from "./../utils/common.js";
 import {WAYPOINT_TYPE, DESTINATION, PRICE, DESCRIPTION_MAX_LENGTH, timeHours, timeMinutes, DESCRIPTION, photosCount} from "./../consts.js";
 
 const createRandomString = (items) => {
