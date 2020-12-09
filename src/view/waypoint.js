@@ -1,5 +1,5 @@
-import {getRandomInteger, getTimeInfo} from "./../utils/common.js";
-import {timeHours, timeMinutes, OFFER_KEYS} from "./../consts.js";
+import {getTimeInfo} from "./../utils/common.js";
+import {timeGap, OFFER_KEYS} from "./../consts.js";
 import Abstract from "./abstract.js";
 
 const createOfferTemplate = (items) => {
@@ -13,22 +13,13 @@ const createOfferTemplate = (items) => {
   return offerTemplate.join(``);
 };
 
-const getDateEnd = (dateStart, dateEnd) => {
-  const hoursGap = getRandomInteger(timeHours.MIN, timeHours.MAX);
-  const minuteGap = getRandomInteger(timeMinutes.MIN, timeMinutes.MAX);
-
-  const dateEndTime = dateEnd.isAfter(dateStart) ? dateEnd : dateStart.add(hoursGap, `h`).add(minuteGap, `m`);
-
-  return dateEndTime;
-};
-
 const createWaypointTemplate = (waypoint) => {
 
   const {dateStart, dateEnd, type, destination, date, price, isFavorite, offers} = waypoint;
 
   const offerTemplate = OFFER_KEYS.includes(type) ? createOfferTemplate(offers) : ``;
 
-  const dateEndTime = getDateEnd(dateStart, dateEnd);
+  const dateEndTime = dateEnd.isAfter(dateStart) ? dateEnd : dateStart.add(timeGap.HOURS, `h`).add(timeGap.MINUTES, `m`);
 
   const favoriteBtnActive = isFavorite ? `event__favorite-btn--active` : ``;
 

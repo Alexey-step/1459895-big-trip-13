@@ -66,6 +66,11 @@ const timeMinutes = {
   MAX: 60
 };
 
+const timeGap = {
+  HOURS: 5,
+  MINUTES: 30
+};
+
 const DESCRIPTION = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
@@ -101,5 +106,6 @@ export {
   timeMinutes,
   DESCRIPTION,
   photosCount,
-  minutes
+  minutes,
+  timeGap
 };
