@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import {getRandomInteger, getRandomElement, getUniqueItem, getRandomOffers} from "./../utils/common.js";
 import {WAYPOINT_TYPE, DESTINATION, PRICE, DESCRIPTION_MAX_LENGTH, timeHours, timeMinutes, DESCRIPTION, photosCount} from "./../consts.js";
+import {nanoid} from "./../utils/nanoid.js";
 
 const createRandomString = (items) => {
   let arr = [];
@@ -38,6 +39,7 @@ const createPhotosArray = () => {
 
 export const generateWaypoint = () => {
   return {
+    id: nanoid(),
     dateStart: getRandomTime(),
     dateEnd: getRandomTime(),
     type: getRandomElement(WAYPOINT_TYPE),
