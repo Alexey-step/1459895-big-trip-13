@@ -22,12 +22,11 @@ const createRouteInfoTemplate = (items) => {
   const dateTemplate = createRouteDateTemplate(items);
 
   return `<section class="trip-main__trip-info  trip-info">
-  <div class="trip-info__main">
-    <h1 class="trip-info__title">${routeInfoTemplate}</h1>
-
-    ${dateTemplate}
-  </div>
-</section>`;
+            <div class="trip-info__main">
+              <h1 class="trip-info__title">${routeInfoTemplate}</h1>
+              ${dateTemplate}
+            </div>
+          </section>`;
 };
 
 export default class RouteInfoView extends Abstract {
