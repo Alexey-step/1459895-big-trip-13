@@ -99,4 +99,9 @@ export default class PointPresenter {
       this._replaceFormToWaypoint();
     }
   }
+
+  destroy() {
+    remove(this._waypointComponent);
+    remove(this._formEditComponent);
+  }
 }

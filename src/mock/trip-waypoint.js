@@ -37,11 +37,23 @@ const createPhotosArray = () => {
   return arr;
 };
 
+const getDateEnd = (dateStart) => {
+  const hoursGap = getRandomInteger(timeHours.MIN, timeHours.MAX);
+  const minuteGap = getRandomInteger(timeMinutes.MIN, timeMinutes.MAX);
+  const dateEnd = getRandomTime();
+  const dateEndTime = dateEnd.isAfter(dateStart) ? dateEnd : dateStart.add(hoursGap, `h`).add(minuteGap, `m`);
+
+  return dateEndTime;
+};
+
 export const generateWaypoint = () => {
+  const dateStart = getRandomTime();
+  const dateEnd = getDateEnd(dateStart);
+
   return {
     id: nanoid(),
-    dateStart: getRandomTime(),
-    dateEnd: getRandomTime(),
+    dateStart,
+    dateEnd,
     type: getRandomElement(WAYPOINT_TYPE),
     destination: getRandomElement(DESTINATION),
     description: createRandomString(DESCRIPTION),
