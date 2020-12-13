@@ -79,5 +79,11 @@ export const sortWaypointsByTime = (itemsA, itemsB) => {
   const timeDurationItemsA = itemsA.dateEnd.diff(itemsA.dateStart, `m`);
   const timeDurationItemsB = itemsB.dateEnd.diff(itemsB.dateStart, `m`);
 
-  return timeDurationItemsB - timeDurationItemsA;
+  if (timeDurationItemsB > timeDurationItemsA) {
+    return 1;
+  }
+  if (timeDurationItemsB < timeDurationItemsA) {
+    return -1;
+  }
+  return 0;
 };

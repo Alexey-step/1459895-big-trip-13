@@ -40,10 +40,8 @@ const createPhotosArray = () => {
 const getDateEnd = (dateStart) => {
   const hoursGap = getRandomInteger(timeHours.MIN, timeHours.MAX);
   const minuteGap = getRandomInteger(timeMinutes.MIN, timeMinutes.MAX);
-  const dateEnd = getRandomTime();
-  const dateEndTime = dateEnd.isAfter(dateStart) ? dateEnd : dateStart.add(hoursGap, `h`).add(minuteGap, `m`);
 
-  return dateEndTime;
+  return dateStart.add(hoursGap, `h`).add(minuteGap, `m`);
 };
 
 export const generateWaypoint = () => {

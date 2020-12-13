@@ -4,8 +4,8 @@ import {SortType} from "./../consts.js";
 const createSortTemplate = () => {
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
             <div class="trip-sort__item  trip-sort__item--day">
-              <input id="${SortType.DAY}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
-              <label class="trip-sort__btn" for="${SortType.DAY}">Day</label>
+              <input id="sort-day" data-sort-type="${SortType.DAY}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
+              <label class="trip-sort__btn" for="sort-day">Day</label>
             </div>
 
             <div class="trip-sort__item  trip-sort__item--event">
@@ -14,13 +14,13 @@ const createSortTemplate = () => {
             </div>
 
             <div class="trip-sort__item  trip-sort__item--time">
-              <input id="${SortType.TIME}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
-              <label class="trip-sort__btn" for="${SortType.TIME}">Time</label>
+              <input id="sort-time" data-sort-type="${SortType.TIME}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
+              <label class="trip-sort__btn" for="sort-time">Time</label>
             </div>
 
             <div class="trip-sort__item  trip-sort__item--price">
-              <input id="${SortType.PRICE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
-              <label class="trip-sort__btn" for="${SortType.PRICE}">Price</label>
+              <input id="sort-price" data-sort-type="${SortType.PRICE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
+              <label class="trip-sort__btn" for="sort-price">Price</label>
             </div>
 
             <div class="trip-sort__item  trip-sort__item--offer">
@@ -41,7 +41,7 @@ export default class SortView extends Abstract {
     if (evt.target.tagName !== `INPUT`) {
       return;
     }
-    const sortType = evt.target.id;
+    const sortType = evt.target.dataset.sortType;
 
     evt.preventDefault();
     this._callback.sortTypeChange(sortType);
