@@ -1,4 +1,4 @@
-import {offersCount, offerTitle, offerPrice, minutes} from "./../consts.js";
+import {offersCount, offerTitle, offerPrice, minutes, DESCRIPTION_MAX_LENGTH, photosCount} from "./../consts.js";
 
 export const getTimeInfo = (dateEnd, dateStart) => {
   let timeStr = ``;
@@ -19,6 +19,26 @@ export const getTimeInfo = (dateEnd, dateStart) => {
     timeStr = `${minute}M`;
   }
   return timeStr;
+};
+
+export const createRandomString = (items) => {
+  let arr = [];
+  let cloneArr = [].concat(items);
+  let arrRandomLength = Math.floor(Math.random() * DESCRIPTION_MAX_LENGTH + 1);
+  while (arr.length < arrRandomLength) {
+    arr.push(getUniqueItem(cloneArr));
+  }
+  return arr.join(` `);
+};
+
+export const createPhotosArray = () => {
+  const arr = [];
+  const count = getRandomInteger(photosCount.MIN, photosCount.MAX);
+  for (let i = 0; i < count; i++) {
+    const photo = `http://picsum.photos/248/152?r=${Math.random()}`;
+    arr.push(photo);
+  }
+  return arr;
 };
 
 export const getRandomOffers = () => {

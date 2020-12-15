@@ -1,5 +1,5 @@
-import {OFFER_KEYS, WAYPOINT_TYPE} from "./../consts.js";
-import Abstract from "./abstract.js";
+import {WAYPOINT_TYPE} from "./../consts.js";
+import Smart from "./smart.js";
 
 const createDateTemplate = (item) => {
   return `<div class="event__field-group  event__field-group--time">
@@ -21,11 +21,12 @@ const createTypeTemplate = (item) => {
 };
 
 const createDescriptionTemplate = (item, destination) => {
-  return `<p class="event__destination-description">${destination !== null ? item : ``}</p>`;
+  return `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+  <p class="event__destination-description">${item[destination]}</p>`;
 };
 
-const createOfferEditTemplate = (items) => {
-  const offerEditTemplate = items.map((item, i) => {
+const createOfferEditTemplate = (items, type) => {
+  const offerEditTemplate = items[type].map((item, i) => {
     return `<div class="event__offer-selector">
               <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${item.check ? `checked` : ``}>
               <label class="event__offer-label" for="event-offer-luggage-${i}">
@@ -43,22 +44,22 @@ const createOfferEditTemplate = (items) => {
           </section>`;
 };
 
-const createPhotoTemplate = (items) => {
-  const photoTemplate = items.map((item) => {
+const createPhotoTemplate = (items, destination) => {
+  const photoTemplate = items[destination].map((item) => {
     return `<img width="80" height="80" src="${item}" alt="">`;
   });
   return photoTemplate.join(``);
 };
 
-const createFormEditingTemplate = (waypoint) => {
+const createFormEditingTemplate = (data) => {
 
-  const {type, destination, price, photos, description, offers} = waypoint;
+  const {type, destination, price, photos, description, offers} = data;
 
-  const descriptionTemplate = createDescriptionTemplate(description, destination);
+  const descriptionTemplate = destination ? createDescriptionTemplate(description, destination) : ``;
   const typeTemplate = createTypeTemplate(type);
-  const offerEditTemplate = OFFER_KEYS.includes(type) ? createOfferEditTemplate(offers) : ``;
-  const dateTemplate = createDateTemplate(waypoint);
-  const photosTemplate = createPhotoTemplate(photos);
+  const offerEditTemplate = offers[type] ? createOfferEditTemplate(offers, type) : ``;
+  const dateTemplate = createDateTemplate(data);
+  const photosTemplate = destination ? createPhotoTemplate(photos, destination) : ``;
 
   return `<li class="trip-events__item">
             <form class="event event--edit" action="#" method="post">
@@ -104,7 +105,6 @@ const createFormEditingTemplate = (waypoint) => {
               <section class="event__details">
                 ${offerEditTemplate}
                 <section class="event__section  event__section--destination">
-                  <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                   ${descriptionTemplate}
                   ${photosTemplate}
                 </section>
@@ -113,35 +113,91 @@ const createFormEditingTemplate = (waypoint) => {
           </li>`;
 };
 
-export default class FormEditingView extends Abstract {
+export default class FormEditingView extends Smart {
   constructor(waypoint) {
     super();
-    this._waypoint = waypoint;
+
+    this._data = FormEditingView.parseWaypointToData(waypoint);
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._editClickHandler = this._editClickHandler.bind(this);
+    this._editCloseClickHandler = this._editCloseClickHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   getTemplate() {
-    return createFormEditingTemplate(this._waypoint);
+    return createFormEditingTemplate(this._data);
+  }
+
+  reset(waypoint) {
+    this.updateData(
+        FormEditingView.parseWaypointToData(waypoint)
+    );
+  }
+
+  static parseWaypointToData(waypoint) {
+    return Object.assign(
+        {},
+        waypoint);
+  }
+
+  static parseDataToWaypoint(data) {
+    data = Object.assign({}, data);
+
+    return data;
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setEditCloseClickHandler(this._callback.editCloseClick);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._typeChangeHandler);
+    this.getElement().querySelector(`.event__field-group--destination`).addEventListener(`change`, this._destinationChangeHandler);
+  }
+
+  _typeChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value,
+    });
+  }
+
+  _destinationChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      destination: evt.target.value
+    });
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._waypoint);
+    const newOffers = this._data.offers[this._data.type];
+
+    this.getElement().querySelectorAll(`.event__offer-checkbox`)
+    .forEach((offer, i) => {
+      newOffers[i].check = offer.checked;
+    });
+
+    this._callback.formSubmit(FormEditingView.parseDataToWaypoint(this._data));
   }
 
-  _editClickHandler(evt) {
+  _editCloseClickHandler(evt) {
     evt.preventDefault();
-    this._callback.editClick();
+    this._callback.editCloseClick();
   }
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
-    this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, this._formSubmitHandler);
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
-  setEditClickHandler(callback) {
-    this._callback.editClick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
+  setEditCloseClickHandler(callback) {
+    this._callback.editCloseClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editCloseClickHandler);
   }
 }

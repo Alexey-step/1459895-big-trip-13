@@ -7,16 +7,16 @@ export default class Smart extends Abstract {
     this._data = {};
   }
 
-  _updateData(update) {
+  updateData(update) {
     if (!update) {
       return;
     }
     this._data = Object.assign({}, this._data, update);
 
-    this._updateElement();
+    this.updateElement();
   }
 
-  _updateElement() {
+  updateElement() {
     let prevElement = this.getElement();
     const parent = prevElement.parentElement;
     this.removeElement();
@@ -25,10 +25,10 @@ export default class Smart extends Abstract {
 
     parent.replaceChild(newElement, prevElement);
 
-    this._restoreHandlers();
+    this.restoreHandlers();
   }
 
-  _restoreHandlers() {
+  restoreHandlers() {
     throw new Error(`Abstract method not implemented: resetHandlers`);
   }
 }
