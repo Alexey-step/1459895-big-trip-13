@@ -1,5 +1,5 @@
 import {getTimeInfo} from "./../utils/common.js";
-import {timeGap, OFFER_KEYS} from "./../consts.js";
+import {OFFER_KEYS} from "./../consts.js";
 import Abstract from "./abstract.js";
 
 const createOfferTemplate = (items) => {
@@ -19,11 +19,9 @@ const createWaypointTemplate = (waypoint) => {
 
   const offerTemplate = OFFER_KEYS.includes(type) ? createOfferTemplate(offers) : ``;
 
-  const dateEndTime = dateEnd.isAfter(dateStart) ? dateEnd : dateStart.add(timeGap.HOURS, `h`).add(timeGap.MINUTES, `m`);
-
   const favoriteBtnActive = isFavorite ? `event__favorite-btn--active` : ``;
 
-  const duration = getTimeInfo(dateEndTime, dateStart);
+  const duration = getTimeInfo(dateEnd, dateStart);
 
   return `<li class="trip-events__item">
             <div class="event">
@@ -36,7 +34,7 @@ const createWaypointTemplate = (waypoint) => {
                 <p class="event__time">
                   <time class="event__start-time" datetime="2019-03-18T10:30">${dateStart.format(`HH:mm`)}</time>
                     &mdash;
-                  <time class="event__end-time" datetime="2019-03-18T11:00">${dateEndTime.format(`HH:mm`)}</time>
+                  <time class="event__end-time" datetime="2019-03-18T11:00">${dateEnd.format(`HH:mm`)}</time>
                 </p>
                 <p class="event__duration">${duration}</p>
               </div>

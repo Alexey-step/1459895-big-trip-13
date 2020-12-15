@@ -66,11 +66,6 @@ const timeMinutes = {
   MAX: 60
 };
 
-const timeGap = {
-  HOURS: 5,
-  MINUTES: 30
-};
-
 const DESCRIPTION = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
@@ -93,6 +88,12 @@ const minutes = {
   IN_HOUR: 60
 };
 
+const SortType = {
+  DAY: `sort-day`,
+  TIME: `sort-time`,
+  PRICE: `sort-price`,
+};
+
 export {
   OFFER_KEYS,
   offersCount,
@@ -107,5 +108,5 @@ export {
   DESCRIPTION,
   photosCount,
   minutes,
-  timeGap
+  SortType
 };

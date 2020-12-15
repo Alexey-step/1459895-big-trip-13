@@ -5,13 +5,10 @@ export const getTimeInfo = (dateEnd, dateStart) => {
   let day;
   let hour;
   let minute = dateEnd.diff(dateStart, `m`);
-  if (minute < 0) {
-    minute = minute * -1;
-  }
   if (minute > minutes.IN_DAY) {
     day = Math.floor(minute / minutes.IN_DAY);
     hour = Math.floor((minute - day * minutes.IN_DAY) / minutes.IN_HOUR);
-    minute = minute - ((minute - day * minutes.IN_DAY) % minutes.IN_HOUR);
+    minute = ((minute - day * minutes.IN_DAY) - hour * minutes.IN_HOUR);
     timeStr = `${day}D ${hour}H ${minute}M`;
   } else if (minute >= minutes.IN_HOUR && minute < minutes.IN_DAY) {
     hour = Math.floor(minute / minutes.IN_HOUR);
@@ -76,4 +73,17 @@ export const updateItem = (items, update) => {
     update,
     ...items.slice(index + 1)
   ];
+};
+
+export const sortWaypointsByTime = (itemsA, itemsB) => {
+  const timeDurationItemsA = itemsA.dateEnd.diff(itemsA.dateStart, `m`);
+  const timeDurationItemsB = itemsB.dateEnd.diff(itemsB.dateStart, `m`);
+
+  if (timeDurationItemsB > timeDurationItemsA) {
+    return 1;
+  }
+  if (timeDurationItemsB < timeDurationItemsA) {
+    return -1;
+  }
+  return 0;
 };
