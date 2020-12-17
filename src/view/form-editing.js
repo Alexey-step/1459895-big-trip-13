@@ -1,12 +1,16 @@
 import {WAYPOINT_TYPE} from "./../consts.js";
 import Smart from "./smart.js";
+import dayjs from "dayjs";
+import flatpickr from "flatpickr";
+
+import "./../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const createDateTemplate = (item) => {
   return `<div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${item.dateStart !== null ? item.dateStart.format(`DD/MM/YY HH:mm`) : ``}">&mdash;
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${item.dateEnd.format(`DD/MM/YY HH:mm`)}">&mdash;
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${item.dateEnd !== null ? item.dateEnd.format(`DD/MM/YY HH:mm`) : ``}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${item.dateStart.format(`DD/MM/YY HH:mm`)}">
           </div>`;
 };
 
@@ -53,13 +57,14 @@ const createPhotoTemplate = (items, destination) => {
 
 const createFormEditingTemplate = (data) => {
 
-  const {type, destination, price, photos, description, offers} = data;
+  const {type, destination, price, photos, description, offers, dateEnd, dateStart} = data;
 
   const descriptionTemplate = destination ? createDescriptionTemplate(description, destination) : ``;
   const typeTemplate = createTypeTemplate(type);
   const offerEditTemplate = offers[type] ? createOfferEditTemplate(offers, type) : ``;
   const dateTemplate = createDateTemplate(data);
   const photosTemplate = destination ? createPhotoTemplate(photos, destination) : ``;
+  const isSubmitDisabled = dateEnd.isAfter(dateStart) ? `` : `disabled`;
 
   return `<li class="trip-events__item">
             <form class="event event--edit" action="#" method="post">
@@ -96,7 +101,7 @@ const createFormEditingTemplate = (data) => {
                   </label>
                   <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
                 </div>
-                <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+                <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled}>Save</button>
                 <button class="event__reset-btn" type="reset">Delete</button>
                 <button class="event__rollup-btn" type="button">
                   <span class="visually-hidden">Open event</span>
@@ -118,13 +123,18 @@ export default class FormEditView extends Smart {
     super();
 
     this._data = FormEditView.parseWaypointToData(waypoint);
+    this._dateStartPicker = null;
+    this._dateEndPicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._editCloseClickHandler = this._editCloseClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._dateStartChangeHandler = this._dateStartChangeHandler.bind(this);
+    this._dateEndChangeHandler = this._dateEndChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   getTemplate() {
@@ -135,6 +145,53 @@ export default class FormEditView extends Smart {
     this.updateData(
         FormEditView.parseWaypointToData(waypoint)
     );
+  }
+
+  _setDatepicker() {
+    if (this._dateStartPicker) {
+      this._dateStartPicker.destroy();
+      this._dateStartPicker = null;
+    }
+    if (this._dateEndPicker) {
+      this._dateEndPicker.destroy();
+      this._dateEndPicker = null;
+    }
+
+    this._dateStartPicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/y H:i`,
+          dateDefault: this._data.dateStart,
+          defaultDate: `${this._data.dateStart}`,
+          onChange: this._dateStartChangeHandler
+        }
+    );
+
+    this._dateEndPicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/y H:i`,
+          minDate: `${this._data.dateStart}`,
+          dateDefault: this._data.dateEnd,
+          defaultDate: `${this._data.dateEnd}`,
+          onChange: this._dateEndChangeHandler
+        }
+    );
+  }
+
+  _dateStartChangeHandler([userDate]) {
+    this.updateData({
+      dateStart: dayjs(userDate),
+      date: dayjs(userDate)
+    });
+  }
+
+  _dateEndChangeHandler([userDate]) {
+    this.updateData({
+      dateEnd: dayjs(userDate)
+    });
   }
 
   static parseWaypointToData(waypoint) {
@@ -149,6 +206,7 @@ export default class FormEditView extends Smart {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setEditCloseClickHandler(this._callback.editCloseClick);
   }
