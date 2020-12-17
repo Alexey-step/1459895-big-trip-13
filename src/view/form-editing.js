@@ -113,11 +113,11 @@ const createFormEditingTemplate = (data) => {
           </li>`;
 };
 
-export default class FormEditingView extends Smart {
+export default class FormEditView extends Smart {
   constructor(waypoint) {
     super();
 
-    this._data = FormEditingView.parseWaypointToData(waypoint);
+    this._data = FormEditView.parseWaypointToData(waypoint);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._editCloseClickHandler = this._editCloseClickHandler.bind(this);
@@ -133,14 +133,12 @@ export default class FormEditingView extends Smart {
 
   reset(waypoint) {
     this.updateData(
-        FormEditingView.parseWaypointToData(waypoint)
+        FormEditView.parseWaypointToData(waypoint)
     );
   }
 
   static parseWaypointToData(waypoint) {
-    return Object.assign(
-        {},
-        waypoint);
+    return Object.assign({}, waypoint);
   }
 
   static parseDataToWaypoint(data) {
@@ -183,7 +181,7 @@ export default class FormEditingView extends Smart {
       newOffers[i].check = offer.checked;
     });
 
-    this._callback.formSubmit(FormEditingView.parseDataToWaypoint(this._data));
+    this._callback.formSubmit(FormEditView.parseDataToWaypoint(this._data));
   }
 
   _editCloseClickHandler(evt) {

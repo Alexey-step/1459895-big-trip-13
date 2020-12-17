@@ -1,4 +1,4 @@
-import FormEditingView from "./../view/form-editing.js";
+import FormEditView from "./../view/form-editing.js";
 import WaypointView from "./../view/waypoint.js";
 import {render, renderPosition, replace, remove} from "./../utils/render.js";
 
@@ -31,7 +31,7 @@ export default class PointPresenter {
     const prevFormEditComponent = this._formEditComponent;
 
     this._waypointComponent = new WaypointView(waypoint);
-    this._formEditComponent = new FormEditingView(waypoint);
+    this._formEditComponent = new FormEditView(waypoint);
 
     this._waypointComponent.setEditClickHandler(this._handleEditClick);
     this._formEditComponent.setEditCloseClickHandler(this._handleCloseEditClick);
