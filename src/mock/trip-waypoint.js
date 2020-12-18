@@ -3,11 +3,11 @@ import {getRandomInteger, getRandomElement, getRandomOffers, createRandomString,
 import {WAYPOINT_TYPE, DESTINATION, PRICE, timeHours, timeMinutes, DESCRIPTION} from "./../consts.js";
 import {nanoid} from "./../utils/nanoid.js";
 
-const getRandomTime = () => {
+const getRandomTime = (item) => {
   const hoursGap = getRandomInteger(timeHours.MIN, timeHours.MAX);
   const minuteGap = getRandomInteger(timeMinutes.MIN, timeMinutes.MAX);
 
-  return dayjs().hour(hoursGap).minute(minuteGap);
+  return dayjs(item).hour(hoursGap).minute(minuteGap);
 };
 
 const generateDate = () => {
@@ -25,7 +25,9 @@ const getDateEnd = (dateStart) => {
 };
 
 export const generateWaypoint = () => {
-  const dateStart = getRandomTime();
+  const newDate = generateDate();
+  const dateStart = getRandomTime(newDate);
+  const date = dateStart;
   const dateEnd = getDateEnd(dateStart);
   const type = getRandomElement(WAYPOINT_TYPE);
   const destination = getRandomElement(DESTINATION);
@@ -55,7 +57,7 @@ export const generateWaypoint = () => {
     destination,
     description,
     photos,
-    date: generateDate(),
+    date,
     price: getRandomInteger(PRICE.MIN, PRICE.MAX),
     isFavorite: Boolean(getRandomInteger(0, 1)),
     offers,

@@ -82,6 +82,9 @@ export default class TripPresenter {
       case SortType.TIME:
         this._waypoints.sort(sortWaypointsByTime);
         break;
+      case SortType.DAY:
+        this._waypoints.sort((a, b) => a.date - b.date);
+        break;
       default:
         this._waypoints = this._sourcedWaypoints.slice();
     }
