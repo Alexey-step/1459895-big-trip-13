@@ -3,7 +3,7 @@ const OFFER_KEYS = [
   `Taxi`,
   `Drive`,
   `Sightseeing`,
-  `Checkin`
+  `Check-in`
 ];
 
 const offersCount = {

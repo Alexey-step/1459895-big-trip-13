@@ -1,4 +1,4 @@
-import FormEditingView from "./../view/form-editing.js";
+import FormEditView from "./../view/form-editing.js";
 import WaypointView from "./../view/waypoint.js";
 import {render, renderPosition, replace, remove} from "./../utils/render.js";
 
@@ -17,6 +17,7 @@ export default class PointPresenter {
     this._formEditComponent = null;
     this._mode = Mode.DEFAULT;
 
+    this._handleCloseEditClick = this._handleCloseEditClick.bind(this);
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
@@ -30,10 +31,10 @@ export default class PointPresenter {
     const prevFormEditComponent = this._formEditComponent;
 
     this._waypointComponent = new WaypointView(waypoint);
-    this._formEditComponent = new FormEditingView(waypoint);
+    this._formEditComponent = new FormEditView(waypoint);
 
     this._waypointComponent.setEditClickHandler(this._handleEditClick);
-    this._formEditComponent.setEditClickHandler(this._handleFormSubmit);
+    this._formEditComponent.setEditCloseClickHandler(this._handleCloseEditClick);
     this._formEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._waypointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
@@ -70,6 +71,7 @@ export default class PointPresenter {
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
+      this._formEditComponent.reset(this._waypoint);
       this._replaceFormToWaypoint();
     }
   }
@@ -78,7 +80,13 @@ export default class PointPresenter {
     this._replaceWaypointToForm();
   }
 
-  _handleFormSubmit() {
+  _handleCloseEditClick() {
+    this._formEditComponent.reset(this._waypoint);
+    this._replaceFormToWaypoint();
+  }
+
+  _handleFormSubmit(waypoint) {
+    this._changeData(waypoint);
     this._replaceFormToWaypoint();
   }
 

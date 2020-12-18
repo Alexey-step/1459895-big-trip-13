@@ -1,9 +1,8 @@
 import {getTimeInfo} from "./../utils/common.js";
-import {OFFER_KEYS} from "./../consts.js";
 import Abstract from "./abstract.js";
 
-const createOfferTemplate = (items) => {
-  const offerTemplate = items.map((item) => {
+const createOfferTemplate = (items, type) => {
+  const offerTemplate = items[type].map((item) => {
     return item.check ? `<li class="event__offer">
                           <span class="event__offer-title">${item.title}</span>
                             &plus;&euro;&nbsp;
@@ -17,7 +16,7 @@ const createWaypointTemplate = (waypoint) => {
 
   const {dateStart, dateEnd, type, destination, date, price, isFavorite, offers} = waypoint;
 
-  const offerTemplate = OFFER_KEYS.includes(type) ? createOfferTemplate(offers) : ``;
+  const offerTemplate = offers[type] ? createOfferTemplate(offers, type) : ``;
 
   const favoriteBtnActive = isFavorite ? `event__favorite-btn--active` : ``;
 
