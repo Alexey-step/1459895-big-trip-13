@@ -7,7 +7,7 @@ const OFFER_KEYS = [
 ];
 
 const offersCount = {
-  MIN: 1,
+  MIN: 0,
   MAX: 5
 };
 

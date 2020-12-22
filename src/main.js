@@ -1,17 +1,28 @@
 import MenuView from "./view/menu.js";
 import {generateWaypoint} from "./mock/trip-waypoint.js";
 import {render, renderPosition} from "./utils/render.js";
+import {getRandomOffers} from "./utils/common.js";
 import PointsModel from "./model/points.js";
 import FilterModel from "./model/filter.js";
+import OffersModel from "./model/offers.js";
 import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
+import {WAYPOINT_TYPE} from "./consts.js";
 
 const WAYPOINT_COUNT = 15;
+
+const offers = WAYPOINT_TYPE.reduce((acc, item) => {
+  acc[item] = getRandomOffers();
+  return acc;
+}, []);
+
+const offersModel = new OffersModel();
+offersModel.setOffers(offers);
 
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
 
-const waypoints = new Array(WAYPOINT_COUNT).fill().map(generateWaypoint).sort((a, b) => a.date - b.date);
+const waypoints = new Array(WAYPOINT_COUNT).fill().map(() => generateWaypoint(offers)).sort((a, b) => a.date - b.date);
 
 pointsModel.setWaypoints(waypoints);
 
@@ -24,7 +35,7 @@ render(tripMainControlsElement, new MenuView(), renderPosition.BEFOREEND);
 
 const filterPresenter = new FilterPresenter(tripMainControlsElement, filterModel);
 
-const tripPresenter = new TripPresenter(tripMainElement, tripEventsElement, pointsModel, filterModel);
+const tripPresenter = new TripPresenter(tripMainElement, tripEventsElement, pointsModel, filterModel, offersModel);
 
 filterPresenter.init();
 tripPresenter.init();

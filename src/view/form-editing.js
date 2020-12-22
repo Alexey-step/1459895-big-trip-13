@@ -2,33 +2,29 @@ import {WAYPOINT_TYPE, DESCRIPTION, DESTINATION} from "./../consts.js";
 import Smart from "./smart.js";
 import dayjs from "dayjs";
 import flatpickr from "flatpickr";
-import {createPhotosArray, getOffers, createRandomString} from "./../utils/common.js";
+import {createPhotosArray, createRandomString} from "./../utils/common.js";
 
 import "./../../node_modules/flatpickr/dist/flatpickr.min.css";
 
-const BLANK = {
-  type: `Taxi`,
-  destination: ``,
-  price: ``,
-  description: {
-    "Amsterdam": createRandomString(DESCRIPTION),
-    "Chamonix": createRandomString(DESCRIPTION),
-    "Geneva": createRandomString(DESCRIPTION)
-  },
-  offers: {
-    "Flight": getOffers(),
-    "Taxi": getOffers(),
-    "Drive": getOffers(),
-    "Sightseeing": getOffers(),
-    "Check-in": getOffers()
-  },
-  dateEnd: ``,
-  dateStart: ``,
-  photos: {
-    "Amsterdam": createPhotosArray(),
-    "Chamonix": createPhotosArray(),
-    "Geneva": createPhotosArray()
-  }
+const getBlank = () => {
+  return {
+    type: `Taxi`,
+    destination: ``,
+    price: ``,
+    description: {
+      "Amsterdam": createRandomString(DESCRIPTION),
+      "Chamonix": createRandomString(DESCRIPTION),
+      "Geneva": createRandomString(DESCRIPTION)
+    },
+    offers: [],
+    dateEnd: ``,
+    dateStart: ``,
+    photos: {
+      "Amsterdam": createPhotosArray(),
+      "Chamonix": createPhotosArray(),
+      "Geneva": createPhotosArray()
+    }
+  };
 };
 
 const createDateTemplate = (item) => {
@@ -55,14 +51,15 @@ const createDescriptionTemplate = (item, destination) => {
   <p class="event__destination-description">${item[destination]}</p>`;
 };
 
-const createOfferEditTemplate = (items, type) => {
-  const offerEditTemplate = items[type].map((item, i) => {
+const createOfferEditTemplate = (globalOffers, offersIds) => {
+
+  const offerEditTemplate = globalOffers.map((offer, i) => {
     return `<div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${item.check ? `checked` : ``}>
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${offersIds.includes(offer.id) ? `checked` : ``}>
               <label class="event__offer-label" for="event-offer-luggage-${i}">
-                <span class="event__offer-title">${item.title}</span>
+                <span class="event__offer-title">${offer.title}</span>
                   &plus;&euro;&nbsp;
-                <span class="event__offer-price">${item.price}</span>
+                <span class="event__offer-price">${offer.price}</span>
               </label>
             </div>`;
   });
@@ -89,13 +86,13 @@ const checkDates = (item) => {
   }
 };
 
-const createFormEditingTemplate = (data) => {
+const createFormEditingTemplate = (data, globalOffers) => {
 
-  const {type, destination, price, photos, description, offers} = data;
+  const {type, destination, price, photos, description, offersIds} = data;
 
   const descriptionTemplate = destination ? createDescriptionTemplate(description, destination) : ``;
   const typeTemplate = createTypeTemplate(type);
-  const offerEditTemplate = offers[type] ? createOfferEditTemplate(offers, type) : ``;
+  const offerEditTemplate = createOfferEditTemplate(globalOffers[type], offersIds);
   const dateTemplate = createDateTemplate(data);
   const photosTemplate = destination ? createPhotoTemplate(photos, destination) : ``;
   const isSubmitDisabled = checkDates(data);
@@ -153,8 +150,10 @@ const createFormEditingTemplate = (data) => {
 };
 
 export default class FormEditView extends Smart {
-  constructor(waypoint = BLANK) {
+  constructor(waypoint = getBlank(), globalOffers) {
     super();
+
+    this._globalOffers = globalOffers.getOffers();
 
     this._data = FormEditView.parseWaypointToData(waypoint);
     this._dateStartPicker = null;
@@ -174,7 +173,7 @@ export default class FormEditView extends Smart {
   }
 
   getTemplate() {
-    return createFormEditingTemplate(this._data);
+    return createFormEditingTemplate(this._data, this._globalOffers);
   }
 
   removeElement() {
@@ -300,13 +299,15 @@ export default class FormEditView extends Smart {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    const newOffers = this._data.offers[this._data.type];
-
+    const newOffers = this._globalOffers[this._data.type].slice();
+    let selectedOffers = [];
     this.getElement().querySelectorAll(`.event__offer-checkbox`)
-    .forEach((offer, i) => {
-      newOffers[i].check = offer.checked;
+    .forEach((element, i) => {
+      if (element.checked) {
+        selectedOffers.push(newOffers[i].id);
+      }
     });
-
+    this._data.offersIds = selectedOffers;
     this._callback.formSubmit(FormEditView.parseDataToWaypoint(this._data));
   }
 

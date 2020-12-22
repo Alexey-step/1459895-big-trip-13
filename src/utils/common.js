@@ -1,5 +1,6 @@
 import {offersCount, offerTitle, offerPrice, minutes, DESCRIPTION_MAX_LENGTH, photosCount, FilterType} from "./../consts.js";
 import dayjs from "dayjs";
+import {nanoid} from "./nanoid.js";
 
 export const getTimeInfo = (dateEnd, dateStart) => {
   let timeStr = ``;
@@ -49,30 +50,30 @@ export const getRandomOffers = () => {
   const offerTitleClone = [].concat(offerTitle);
   for (let i = 0; i < offerCount; i++) {
     offer = {
+      id: nanoid(),
       title: getUniqueItem(offerTitleClone),
-      price: getRandomInteger(offerPrice.MIN, offerPrice.MAX),
-      check: Boolean(getRandomInteger(0, 1))
+      price: getRandomInteger(offerPrice.MIN, offerPrice.MAX)
     };
     offersArr.push(offer);
   }
   return offersArr;
 };
 
-export const getOffers = () => {
-  let offersArr = [];
-  let offer = {};
-  const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
-  const offerTitleClone = [].concat(offerTitle);
-  for (let i = 0; i < offerCount; i++) {
-    offer = {
-      title: getUniqueItem(offerTitleClone),
-      price: getRandomInteger(offerPrice.MIN, offerPrice.MAX),
-      check: false
-    };
-    offersArr.push(offer);
-  }
-  return offersArr;
-};
+// export const getOffers = () => {
+//   let offersArr = [];
+//   let offer = {};
+//   const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
+//   const offerTitleClone = [].concat(offerTitle);
+//   for (let i = 0; i < offerCount; i++) {
+//     offer = {
+//       title: getUniqueItem(offerTitleClone),
+//       price: getRandomInteger(offerPrice.MIN, offerPrice.MAX),
+//       check: false
+//     };
+//     offersArr.push(offer);
+//   }
+//   return offersArr;
+// };
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);

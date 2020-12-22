@@ -1,22 +1,22 @@
 import {getTimeInfo} from "./../utils/common.js";
 import Abstract from "./abstract.js";
 
-const createOfferTemplate = (items, type) => {
-  const offerTemplate = items[type].map((item) => {
-    return item.check ? `<li class="event__offer">
-                          <span class="event__offer-title">${item.title}</span>
+const createOfferTemplate = (globalOffers, offersIds) => {
+  const offerTemplate = globalOffers.map((offer) => {
+    return offersIds.includes(offer.id) ? `<li class="event__offer">
+                          <span class="event__offer-title">${offer.title}</span>
                             &plus;&euro;&nbsp;
-                          <span class="event__offer-price">${item.price}</span>
+                          <span class="event__offer-price">${offer.price}</span>
                         </li>` : ``;
   });
   return offerTemplate.join(``);
 };
 
-const createWaypointTemplate = (waypoint) => {
+const createWaypointTemplate = (waypoint, globalOffers) => {
 
-  const {dateStart, dateEnd, type, destination, date, price, isFavorite, offers} = waypoint;
+  const {dateStart, dateEnd, type, destination, date, price, isFavorite, offersIds} = waypoint;
 
-  const offerTemplate = offers[type] ? createOfferTemplate(offers, type) : ``;
+  const offerTemplate = createOfferTemplate(globalOffers[type], offersIds);
 
   const favoriteBtnActive = isFavorite ? `event__favorite-btn--active` : ``;
 
@@ -57,15 +57,17 @@ const createWaypointTemplate = (waypoint) => {
 };
 
 export default class WaypointView extends Abstract {
-  constructor(waypoint) {
+  constructor(waypoint, globalOffers) {
     super();
+
+    this._globalOffers = globalOffers;
     this._waypoint = waypoint;
     this._editClickHandler = this._editClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createWaypointTemplate(this._waypoint);
+    return createWaypointTemplate(this._waypoint, this._globalOffers.getOffers());
   }
 
   _favoriteClickHandler(evt) {

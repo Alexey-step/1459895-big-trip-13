@@ -9,10 +9,11 @@ const Mode = {
 };
 
 export default class PointPresenter {
-  constructor(listContainer, changeMode, changeData) {
+  constructor(listContainer, changeMode, changeData, offers) {
     this._listComponent = listContainer;
     this._changeMode = changeMode;
     this._changeData = changeData;
+    this._offers = offers;
 
     this._waypointComponent = null;
     this._formEditComponent = null;
@@ -32,8 +33,8 @@ export default class PointPresenter {
     const prevWaypointComponent = this._waypointComponent;
     const prevFormEditComponent = this._formEditComponent;
 
-    this._waypointComponent = new WaypointView(waypoint);
-    this._formEditComponent = new FormEditView(waypoint);
+    this._waypointComponent = new WaypointView(waypoint, this._offers);
+    this._formEditComponent = new FormEditView(waypoint, this._offers);
 
     this._waypointComponent.setEditClickHandler(this._handleEditClick);
     this._formEditComponent.setEditCloseClickHandler(this._handleCloseEditClick);
