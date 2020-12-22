@@ -41,10 +41,10 @@ export default class TripPresenter {
     this._renderTrip();
   }
 
-  createWaypoint(waypoint) {
+  createWaypoint() {
     this._currentSortType = SortType.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._waypointNewPresenter.init(waypoint);
+    this._waypointNewPresenter.init();
   }
 
   _getWaypoints() {

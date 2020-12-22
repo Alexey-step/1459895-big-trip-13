@@ -78,6 +78,7 @@ export default class WaypointView extends Abstract {
   _editClickHandler(evt) {
     evt.preventDefault();
     this._callback.editClick();
+    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
   }
 
   setFavoriteClickHandler(callback) {

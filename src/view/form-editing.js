@@ -16,7 +16,7 @@ const getBlank = () => {
       "Chamonix": createRandomString(DESCRIPTION),
       "Geneva": createRandomString(DESCRIPTION)
     },
-    offers: [],
+    offersIds: [],
     dateEnd: ``,
     dateStart: ``,
     photos: {
@@ -63,12 +63,12 @@ const createOfferEditTemplate = (globalOffers, offersIds) => {
               </label>
             </div>`;
   });
-  return `<section class="event__section  event__section--offers">
+  return offerEditTemplate.length ? `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
               ${offerEditTemplate.join(``)}
             </div>
-          </section>`;
+          </section>` : ``;
 };
 
 const createPhotoTemplate = (items, destination) => {
@@ -150,7 +150,7 @@ const createFormEditingTemplate = (data, globalOffers) => {
 };
 
 export default class FormEditView extends Smart {
-  constructor(waypoint = getBlank(), globalOffers) {
+  constructor(globalOffers, waypoint = getBlank()) {
     super();
 
     this._globalOffers = globalOffers.getOffers();
