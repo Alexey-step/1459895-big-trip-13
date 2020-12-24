@@ -1,5 +1,5 @@
-import Observer from "./../utils/observer.js";
-import {FilterType} from "./../consts.js";
+import Observer from "../utils/observer.js";
+import {FilterType} from "../consts.js";
 
 export default class FilterModel extends Observer {
   constructor() {

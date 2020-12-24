@@ -1,17 +1,17 @@
-import RouteInfoView from "./../view/route-info.js";
-import TravelCostView from "./../view/travel-cost.js";
-import SortView from "./../view/sort.js";
-import ListView from "./../view/list.js";
-import NoWaypointsView from "./../view/nowaypoints.js";
+import RouteInfoView from "../view/route-info.js";
+import TravelCostView from "../view/travel-cost.js";
+import SortView from "../view/sort.js";
+import ListView from "../view/list.js";
+import NoWaypointsView from "../view/nowaypoints.js";
 import PointPresenter from "./point.js";
 import WaypointNewPresenter from "./new-waypoint.js";
-import {render, renderPosition, remove} from "./../utils/render.js";
-import {sortWaypointsByTime, filter} from "./../../src/utils/common.js";
-import {SortType, UpdateType, UserAction, FilterType} from "./../consts.js";
+import {render, renderPosition, remove} from "../utils/render.js";
+import {sortWaypointsByTime, filter} from "../../src/utils/common.js";
+import {SortType, UpdateType, UserAction, FilterType} from "../consts.js";
 
 export default class TripPresenter {
-  constructor(tripmainContainer, tripEventsContainer, pointsModel, filterModel, offersModel) {
-    this._tripmainContainer = tripmainContainer;
+  constructor(tripMainContainer, tripEventsContainer, pointsModel, filterModel, offersModel) {
+    this._tripmainContainer = tripMainContainer;
     this._tripEventsContainer = tripEventsContainer;
     this._pointPresenter = {};
     this._currentSortType = SortType.DAY;
@@ -22,13 +22,14 @@ export default class TripPresenter {
     this._sortComponent = null;
     this._listComponent = new ListView();
     this._noWaypointsComponent = new NoWaypointsView();
-    this._routeInfoComponent = new RouteInfoView(this._getWaypoints());
-    this._travelCostComponent = new TravelCostView(this._getWaypoints());
+    this._routeInfoComponent = new RouteInfoView(pointsModel.getWaypoints());
+    this._travelCostComponent = new TravelCostView(pointsModel.getWaypoints(), this._offersModel);
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
+
 
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -39,6 +40,21 @@ export default class TripPresenter {
   init() {
 
     this._renderTrip();
+  }
+
+  hide() {
+    this._tripEventsContainer.hide();
+    this._setDefault();
+  }
+
+  show() {
+    this._tripEventsContainer.show();
+
+  }
+
+  _setDefault() {
+    this._currentSortType = SortType.DAY;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
   }
 
   createWaypoint() {
@@ -74,6 +90,8 @@ export default class TripPresenter {
       this._renderSort();
       this._renderList();
       this._renderWaypoints(this._getWaypoints());
+      this._routeInfoComponent = new RouteInfoView(this._getWaypoints());
+      this._travelCostComponent = new TravelCostView(this._getWaypoints(), this._offersModel);
       this._renderRouteInfo();
     }
   }

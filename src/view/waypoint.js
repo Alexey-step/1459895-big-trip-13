@@ -1,4 +1,4 @@
-import {getTimeInfo} from "./../utils/common.js";
+import {getTimeInfo} from "../utils/common.js";
 import Abstract from "./abstract.js";
 import he from "he";
 

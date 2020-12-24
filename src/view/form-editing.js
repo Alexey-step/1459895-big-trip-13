@@ -1,8 +1,8 @@
-import {WAYPOINT_TYPE, DESCRIPTION, DESTINATION} from "./../consts.js";
+import {waypointTypes, descriptions, destinations} from "../consts.js";
 import Smart from "./smart.js";
 import dayjs from "dayjs";
 import flatpickr from "flatpickr";
-import {createPhotosArray, createRandomString} from "./../utils/common.js";
+import {createPhotosArray, createRandomString} from "../utils/common.js";
 
 import "./../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -12,9 +12,9 @@ const getBlank = () => {
     destination: ``,
     price: ``,
     description: {
-      "Amsterdam": createRandomString(DESCRIPTION),
-      "Chamonix": createRandomString(DESCRIPTION),
-      "Geneva": createRandomString(DESCRIPTION)
+      "Amsterdam": createRandomString(descriptions),
+      "Chamonix": createRandomString(descriptions),
+      "Geneva": createRandomString(descriptions)
     },
     offersIds: [],
     dateEnd: ``,
@@ -29,15 +29,15 @@ const getBlank = () => {
 
 const createDateTemplate = (item) => {
   return `<div class="event__field-group  event__field-group--time">
-            <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${item.dateEnd !== `` ? item.dateEnd.format(`DD/MM/YY HH:mm`) : ``}">&mdash;
             <label class="visually-hidden" for="event-start-time-1">From</label>
             <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${item.dateStart !== `` ? item.dateStart.format(`DD/MM/YY HH:mm`) : ``}">
+            <label class="visually-hidden" for="event-end-time-1">To</label>
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${item.dateEnd !== `` ? item.dateEnd.format(`DD/MM/YY HH:mm`) : ``}">&mdash;
           </div>`;
 };
 
 const createTypeTemplate = (item) => {
-  const typeTemplate = WAYPOINT_TYPE.map((element) => {
+  const typeTemplate = waypointTypes.map((element) => {
     return `<div class="event__type-item">
               <input id="event-type-${element.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${element}" ${element === item ? `checked` : ``}>
               <label class="event__type-label  event__type-label--${element.toLowerCase()}" for="event-type-${element.toLowerCase()}-1">${element}</label>
@@ -286,7 +286,7 @@ export default class FormEditView extends Smart {
   }
 
   _destinationChangeHandler(evt) {
-    if (DESTINATION.includes(evt.target.value)) {
+    if (destinations.includes(evt.target.value)) {
       evt.preventDefault();
       this.updateData({
         destination: evt.target.value

@@ -1,7 +1,31 @@
 import Abstract from "./abstract.js";
-import {FilterType} from "./../consts.js";
+import {FilterType} from "../consts.js";
+import dayjs from "dayjs";
 
-const createFiltersTemplate = (currentFilterType) => {
+const getPastWaypoints = (items) => {
+  let sum = 0;
+  items.forEach((item) => {
+    if (item.date < dayjs()) {
+      sum++;
+    }
+  });
+  return sum === 0 ? `disabled` : ``;
+};
+
+const getFutureWaypoints = (items) => {
+  let sum = 0;
+  items.forEach((item) => {
+    if (item.date > dayjs()) {
+      sum++;
+    }
+  });
+  return sum === 0 ? `disabled` : ``;
+};
+
+const createFiltersTemplate = (waypoints, currentFilterType) => {
+
+  const isPastDisabled = getPastWaypoints(waypoints);
+  const isFutureDisabled = getFutureWaypoints(waypoints);
 
   return `<form class="trip-filters" action="#" method="get">
             <div class="trip-filters__filter">
@@ -10,12 +34,12 @@ const createFiltersTemplate = (currentFilterType) => {
             </div>
 
             <div class="trip-filters__filter">
-              <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" ${currentFilterType === FilterType.FUTURE ? `checked` : ``}>
+              <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" ${currentFilterType === FilterType.FUTURE ? `checked` : ``} ${isFutureDisabled}>
               <label class="trip-filters__filter-label" for="filter-future">Future</label>
             </div>
 
             <div class="trip-filters__filter">
-              <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" ${currentFilterType === FilterType.PAST ? `checked` : ``}>
+              <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" ${currentFilterType === FilterType.PAST ? `checked` : ``} ${isPastDisabled}>
               <label class="trip-filters__filter-label" for="filter-past">Past</label>
             </div>
 
@@ -24,16 +48,17 @@ const createFiltersTemplate = (currentFilterType) => {
 };
 
 export default class FilterView extends Abstract {
-  constructor(currentFilterType) {
+  constructor(waypoints, currentFilterType) {
     super();
 
     this._currentFilter = currentFilterType;
+    this._waypoints = waypoints;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createFiltersTemplate(this._currentFilter);
+    return createFiltersTemplate(this._waypoints, this._currentFilter);
   }
 
   _filterTypeChangeHandler(evt) {

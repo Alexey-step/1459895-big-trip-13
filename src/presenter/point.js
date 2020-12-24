@@ -1,7 +1,7 @@
-import FormEditView from "./../view/form-editing.js";
-import WaypointView from "./../view/waypoint.js";
-import {render, renderPosition, replace, remove} from "./../utils/render.js";
-import {UserAction, UpdateType} from "./../consts.js";
+import FormEditView from "../view/form-editing.js";
+import WaypointView from "../view/waypoint.js";
+import {render, renderPosition, replace, remove} from "../utils/render.js";
+import {UserAction, UpdateType} from "../consts.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,

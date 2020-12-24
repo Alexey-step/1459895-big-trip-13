@@ -1,4 +1,4 @@
-import {offersCount, offerTitle, offerPrice, minutes, DESCRIPTION_MAX_LENGTH, photosCount, FilterType} from "./../consts.js";
+import {OfferCount, offerTitles, OfferPrice, Minutes, DESCRIPTIONS_MAX_LENGTH, PhotosCount, FilterType, TimeInMs} from "./../consts.js";
 import dayjs from "dayjs";
 import {nanoid} from "./nanoid.js";
 
@@ -7,16 +7,16 @@ export const getTimeInfo = (dateEnd, dateStart) => {
   let day;
   let hour;
   let minute = dateEnd.diff(dateStart, `m`);
-  if (minute > minutes.IN_DAY) {
-    day = Math.floor(minute / minutes.IN_DAY);
-    hour = Math.floor((minute - day * minutes.IN_DAY) / minutes.IN_HOUR);
-    minute = ((minute - day * minutes.IN_DAY) - hour * minutes.IN_HOUR);
+  if (minute > Minutes.IN_DAY) {
+    day = Math.floor(minute / Minutes.IN_DAY);
+    hour = Math.floor((minute - day * Minutes.IN_DAY) / Minutes.IN_HOUR);
+    minute = ((minute - day * Minutes.IN_DAY) - hour * Minutes.IN_HOUR);
     timeStr = `${day}D ${hour}H ${minute}M`;
-  } else if (minute >= minutes.IN_HOUR && minute < minutes.IN_DAY) {
-    hour = Math.floor(minute / minutes.IN_HOUR);
-    minute = minute - hour * minutes.IN_HOUR;
+  } else if (minute >= Minutes.IN_HOUR && minute < Minutes.IN_DAY) {
+    hour = Math.floor(minute / Minutes.IN_HOUR);
+    minute = minute - hour * Minutes.IN_HOUR;
     timeStr = `${hour}H ${minute}M`;
-  } else if (minute > 0 && minute < minutes.IN_HOUR) {
+  } else if (minute > 0 && minute < Minutes.IN_HOUR) {
     minute = minute;
     timeStr = `${minute}M`;
   }
@@ -26,7 +26,7 @@ export const getTimeInfo = (dateEnd, dateStart) => {
 export const createRandomString = (items) => {
   let arr = [];
   let cloneArr = [].concat(items);
-  let arrRandomLength = Math.floor(Math.random() * DESCRIPTION_MAX_LENGTH + 1);
+  let arrRandomLength = Math.floor(Math.random() * DESCRIPTIONS_MAX_LENGTH + 1);
   while (arr.length < arrRandomLength) {
     arr.push(getUniqueItem(cloneArr));
   }
@@ -35,7 +35,7 @@ export const createRandomString = (items) => {
 
 export const createPhotosArray = () => {
   const arr = [];
-  const count = getRandomInteger(photosCount.MIN, photosCount.MAX);
+  const count = getRandomInteger(PhotosCount.MIN, PhotosCount.MAX);
   for (let i = 0; i < count; i++) {
     const photo = `http://picsum.photos/248/152?r=${Math.random()}`;
     arr.push(photo);
@@ -46,34 +46,18 @@ export const createPhotosArray = () => {
 export const getRandomOffers = () => {
   let offersArr = [];
   let offer = {};
-  const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
-  const offerTitleClone = [].concat(offerTitle);
+  const offerCount = getRandomInteger(OfferCount.MIN, OfferCount.MAX);
+  const offerTitlesClone = [].concat(offerTitles);
   for (let i = 0; i < offerCount; i++) {
     offer = {
       id: nanoid(),
-      title: getUniqueItem(offerTitleClone),
-      price: getRandomInteger(offerPrice.MIN, offerPrice.MAX)
+      title: getUniqueItem(offerTitlesClone),
+      price: getRandomInteger(OfferPrice.MIN, OfferPrice.MAX)
     };
     offersArr.push(offer);
   }
   return offersArr;
 };
-
-// export const getOffers = () => {
-//   let offersArr = [];
-//   let offer = {};
-//   const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
-//   const offerTitleClone = [].concat(offerTitle);
-//   for (let i = 0; i < offerCount; i++) {
-//     offer = {
-//       title: getUniqueItem(offerTitleClone),
-//       price: getRandomInteger(offerPrice.MIN, offerPrice.MAX),
-//       check: false
-//     };
-//     offersArr.push(offer);
-//   }
-//   return offersArr;
-// };
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
@@ -116,4 +100,55 @@ export const filter = {
   [FilterType.EVERYTHING]: (waypoints) => waypoints,
   [FilterType.FUTURE]: (waypoints) => waypoints.filter((waypoint) => waypoint.date > dayjs()),
   [FilterType.PAST]: (waypoints) => waypoints.filter((waypoint) => waypoint.date < dayjs())
+};
+
+export const makeUniqWaypointTypes = (items) => {
+  let arr = [];
+  items.forEach((item) => arr.push(item.type.toUpperCase()));
+  return [...new Set(arr)];
+};
+
+export const getTypesCost = (items, data) => {
+  let arr = [];
+  let sum = 0;
+  items.forEach((item) => {
+    data.forEach((point) => {
+      if (point.type.toUpperCase() === item) {
+        sum += point.price;
+      }
+    });
+    arr.push(sum);
+    sum = 0;
+  });
+  return arr;
+};
+
+export const getTypesCount = (items, data) => {
+  let arr = [];
+  let sum = 0;
+  items.forEach((item) => {
+    data.forEach((point) => {
+      if (point.type.toUpperCase() === item) {
+        sum++;
+      }
+    });
+    arr.push(sum);
+    sum = 0;
+  });
+  return arr;
+};
+
+export const getTimeSpend = (items, data) => {
+  let arr = [];
+  let sum = 0;
+  items.forEach((item) => {
+    data.forEach((point) => {
+      if (point.type.toUpperCase() === item) {
+        sum += (point.dateEnd.diff(point.dateStart)) / TimeInMs.DAY;
+      }
+    });
+    arr.push(Math.round(sum));
+    sum = 0;
+  });
+  return arr;
 };

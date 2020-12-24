@@ -1,7 +1,7 @@
-import FormEditView from "./../view/form-editing.js";
-import {nanoid} from "./../utils/nanoid.js";
-import {remove, render, renderPosition} from "./../utils/render.js";
-import {UserAction, UpdateType} from "./../consts.js";
+import FormEditView from "../view/form-editing.js";
+import {nanoid} from "../utils/nanoid.js";
+import {remove, render, renderPosition} from "../utils/render.js";
+import {UserAction, UpdateType} from "../consts.js";
 
 export default class WaypointNewPresenter {
   constructor(listContainer, changeData, offersModel) {
@@ -49,7 +49,6 @@ export default class WaypointNewPresenter {
         UpdateType.MINOR,
         Object.assign({id: nanoid()}, waypoint)
     );
-    this.destroy();
     document.querySelector(`.trip-main__event-add-btn`).disabled = false;
   }
 

@@ -30,12 +30,13 @@ const createRouteInfoTemplate = (items) => {
 };
 
 export default class RouteInfoView extends Abstract {
-  constructor(waypoint) {
+  constructor(waypoints) {
     super();
-    this._waypoint = waypoint;
+
+    this._waypoints = waypoints;
   }
 
   getTemplate() {
-    return createRouteInfoTemplate(this._waypoint);
+    return createRouteInfoTemplate(this._waypoints);
   }
 }

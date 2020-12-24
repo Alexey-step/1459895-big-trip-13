@@ -2,7 +2,7 @@ import Smart from "./smart.js";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {makeUniqWaypointTypes, getTypesCost, getTypesCount, getTimeSpend} from "../utils/common.js";
-import {ChartConfigs} from "./../consts.js";
+import {ChartConfigs} from "../consts.js";
 
 const renderMoneyChart = (moneyCtx, waypoints) => {
   const uniqWaypointsType = makeUniqWaypointTypes(waypoints);
@@ -261,7 +261,7 @@ export default class StatisticsView extends Smart {
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._data);
+    return createStatisticsTemplate();
   }
 
   show() {
