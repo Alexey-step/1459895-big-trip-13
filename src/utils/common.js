@@ -1,4 +1,6 @@
-import {offersCount, offerTitle, offerPrice, minutes, DESCRIPTION_MAX_LENGTH, photosCount} from "./../consts.js";
+import {offersCount, offerTitle, offerPrice, minutes, DESCRIPTION_MAX_LENGTH, photosCount, FilterType} from "./../consts.js";
+import dayjs from "dayjs";
+import {nanoid} from "./nanoid.js";
 
 export const getTimeInfo = (dateEnd, dateStart) => {
   let timeStr = ``;
@@ -48,14 +50,30 @@ export const getRandomOffers = () => {
   const offerTitleClone = [].concat(offerTitle);
   for (let i = 0; i < offerCount; i++) {
     offer = {
+      id: nanoid(),
       title: getUniqueItem(offerTitleClone),
-      price: getRandomInteger(offerPrice.MIN, offerPrice.MAX),
-      check: Boolean(getRandomInteger(0, 1))
+      price: getRandomInteger(offerPrice.MIN, offerPrice.MAX)
     };
     offersArr.push(offer);
   }
   return offersArr;
 };
+
+// export const getOffers = () => {
+//   let offersArr = [];
+//   let offer = {};
+//   const offerCount = getRandomInteger(offersCount.MIN, offersCount.MAX);
+//   const offerTitleClone = [].concat(offerTitle);
+//   for (let i = 0; i < offerCount; i++) {
+//     offer = {
+//       title: getUniqueItem(offerTitleClone),
+//       price: getRandomInteger(offerPrice.MIN, offerPrice.MAX),
+//       check: false
+//     };
+//     offersArr.push(offer);
+//   }
+//   return offersArr;
+// };
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
@@ -81,20 +99,6 @@ export const getUniqueItem = (items) => {
   return b;
 };
 
-export const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1)
-  ];
-};
-
 export const sortWaypointsByTime = (itemsA, itemsB) => {
   const timeDurationItemsA = itemsA.dateEnd.diff(itemsA.dateStart, `m`);
   const timeDurationItemsB = itemsB.dateEnd.diff(itemsB.dateStart, `m`);
@@ -106,4 +110,10 @@ export const sortWaypointsByTime = (itemsA, itemsB) => {
     return -1;
   }
   return 0;
+};
+
+export const filter = {
+  [FilterType.EVERYTHING]: (waypoints) => waypoints,
+  [FilterType.FUTURE]: (waypoints) => waypoints.filter((waypoint) => waypoint.date > dayjs()),
+  [FilterType.PAST]: (waypoints) => waypoints.filter((waypoint) => waypoint.date < dayjs())
 };

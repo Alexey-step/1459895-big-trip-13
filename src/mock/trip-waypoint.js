@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {getRandomInteger, getRandomElement, getRandomOffers, createRandomString, createPhotosArray} from "./../utils/common.js";
+import {getRandomInteger, getRandomElement, createRandomString, createPhotosArray} from "./../utils/common.js";
 import {WAYPOINT_TYPE, DESTINATION, PRICE, timeHours, timeMinutes, DESCRIPTION} from "./../consts.js";
 import {nanoid} from "./../utils/nanoid.js";
 
@@ -24,20 +24,18 @@ const getDateEnd = (dateStart) => {
   return dateStart.add(hoursGap, `h`).add(minuteGap, `m`);
 };
 
-export const generateWaypoint = () => {
+export const generateWaypoint = (offers) => {
   const newDate = generateDate();
   const dateStart = getRandomTime(newDate);
   const date = dateStart;
   const dateEnd = getDateEnd(dateStart);
   const type = getRandomElement(WAYPOINT_TYPE);
   const destination = getRandomElement(DESTINATION);
-  const offers = {
-    "Flight": getRandomOffers(),
-    "Taxi": getRandomOffers(),
-    "Drive": getRandomOffers(),
-    "Sightseeing": getRandomOffers(),
-    "Check-in": getRandomOffers()
-  };
+
+  const offersIds = offers[type]
+  .filter(() => getRandomInteger(0, 2) === 1)
+  .map((offer) => offer.id);
+
   const description = {
     "Amsterdam": createRandomString(DESCRIPTION),
     "Chamonix": createRandomString(DESCRIPTION),
@@ -60,6 +58,6 @@ export const generateWaypoint = () => {
     date,
     price: getRandomInteger(PRICE.MIN, PRICE.MAX),
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    offers,
+    offersIds,
   };
 };

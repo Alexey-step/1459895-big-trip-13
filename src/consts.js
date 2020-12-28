@@ -7,7 +7,7 @@ const OFFER_KEYS = [
 ];
 
 const offersCount = {
-  MIN: 1,
+  MIN: 0,
   MAX: 5
 };
 
@@ -94,6 +94,24 @@ const SortType = {
   PRICE: `sort-price`,
 };
 
+const UserAction = {
+  UPDATE_WAYPOINT: `UPDATE_WAYPOINT`,
+  ADD_WAYPOINT: `ADD_WAYPOINT`,
+  DELETE_WAYPOINT: `DELETE_WAYPOINT`
+};
+
+const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
+const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
+
 export {
   OFFER_KEYS,
   offersCount,
@@ -108,5 +126,8 @@ export {
   DESCRIPTION,
   photosCount,
   minutes,
-  SortType
+  SortType,
+  UserAction,
+  UpdateType,
+  FilterType
 };

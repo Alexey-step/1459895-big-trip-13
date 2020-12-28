@@ -1,44 +1,45 @@
 import {getTimeInfo} from "./../utils/common.js";
 import Abstract from "./abstract.js";
+import he from "he";
 
-const createOfferTemplate = (items, type) => {
-  const offerTemplate = items[type].map((item) => {
-    return item.check ? `<li class="event__offer">
-                          <span class="event__offer-title">${item.title}</span>
+const createOfferTemplate = (globalOffers, offersIds) => {
+  const offerTemplate = globalOffers.map((offer) => {
+    return offersIds.includes(offer.id) ? `<li class="event__offer">
+                          <span class="event__offer-title">${offer.title}</span>
                             &plus;&euro;&nbsp;
-                          <span class="event__offer-price">${item.price}</span>
+                          <span class="event__offer-price">${offer.price}</span>
                         </li>` : ``;
   });
   return offerTemplate.join(``);
 };
 
-const createWaypointTemplate = (waypoint) => {
+const createWaypointTemplate = (waypoint, globalOffers) => {
 
-  const {dateStart, dateEnd, type, destination, date, price, isFavorite, offers} = waypoint;
+  const {dateStart, dateEnd, type, destination, date, price, isFavorite, offersIds} = waypoint;
 
-  const offerTemplate = offers[type] ? createOfferTemplate(offers, type) : ``;
+  const offerTemplate = createOfferTemplate(globalOffers[type], offersIds);
 
   const favoriteBtnActive = isFavorite ? `event__favorite-btn--active` : ``;
 
-  const duration = getTimeInfo(dateEnd, dateStart);
+  const duration = (dateEnd && dateStart) ? getTimeInfo(dateEnd, dateStart) : ``;
 
   return `<li class="trip-events__item">
             <div class="event">
-              <time class="event__date" datetime="2019-03-18">${date.format(`D MMM`)}</time>
+              <time class="event__date" datetime="2019-03-18">${date ? date.format(`D MMM`) : ``}</time>
               <div class="event__type">
                 <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
               </div>
-              <h3 class="event__title">${type} ${destination}</h3>
+              <h3 class="event__title">${type} ${he.encode(String(destination))}</h3>
               <div class="event__schedule">
                 <p class="event__time">
-                  <time class="event__start-time" datetime="2019-03-18T10:30">${dateStart.format(`HH:mm`)}</time>
+                  <time class="event__start-time" datetime="2019-03-18T10:30">${dateStart ? dateStart.format(`HH:mm`) : ``}</time>
                     &mdash;
-                  <time class="event__end-time" datetime="2019-03-18T11:00">${dateEnd.format(`HH:mm`)}</time>
+                  <time class="event__end-time" datetime="2019-03-18T11:00">${dateEnd ? dateEnd.format(`HH:mm`) : ``}</time>
                 </p>
                 <p class="event__duration">${duration}</p>
               </div>
               <p class="event__price">
-                &euro;&nbsp;<span class="event__price-value">${price}</span>
+                &euro;&nbsp;<span class="event__price-value">${he.encode(String(price))}</span>
               </p>
               <h4 class="visually-hidden">Offers:</h4>
               <ul class="event__selected-offers">${offerTemplate}
@@ -57,15 +58,17 @@ const createWaypointTemplate = (waypoint) => {
 };
 
 export default class WaypointView extends Abstract {
-  constructor(waypoint) {
+  constructor(waypoint, globalOffers) {
     super();
+
+    this._globalOffers = globalOffers;
     this._waypoint = waypoint;
     this._editClickHandler = this._editClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createWaypointTemplate(this._waypoint);
+    return createWaypointTemplate(this._waypoint, this._globalOffers.getOffers());
   }
 
   _favoriteClickHandler(evt) {
@@ -76,6 +79,7 @@ export default class WaypointView extends Abstract {
   _editClickHandler(evt) {
     evt.preventDefault();
     this._callback.editClick();
+    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
   }
 
   setFavoriteClickHandler(callback) {
