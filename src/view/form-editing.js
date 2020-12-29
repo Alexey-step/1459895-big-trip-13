@@ -1,38 +1,27 @@
-import {waypointTypes, descriptions, destinations} from "../consts.js";
+import {waypointTypes} from "../consts.js";
 import Smart from "./smart.js";
 import dayjs from "dayjs";
 import flatpickr from "flatpickr";
-import {createPhotosArray, createRandomString} from "../utils/common.js";
 
 import "./../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const getBlank = () => {
   return {
     type: `Taxi`,
-    destination: ``,
+    destination: {},
     price: ``,
-    description: {
-      "Amsterdam": createRandomString(descriptions),
-      "Chamonix": createRandomString(descriptions),
-      "Geneva": createRandomString(descriptions)
-    },
     offersIds: [],
     dateEnd: ``,
-    dateStart: ``,
-    photos: {
-      "Amsterdam": createPhotosArray(),
-      "Chamonix": createPhotosArray(),
-      "Geneva": createPhotosArray()
-    }
+    dateStart: ``
   };
 };
 
 const createDateTemplate = (item) => {
   return `<div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${item.dateStart !== `` ? item.dateStart.format(`DD/MM/YY HH:mm`) : ``}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${item.dateStart ? item.dateStart.format(`DD/MM/YY HH:mm`) : ``}">&mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${item.dateEnd !== `` ? item.dateEnd.format(`DD/MM/YY HH:mm`) : ``}">&mdash;
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${item.dateEnd ? item.dateEnd.format(`DD/MM/YY HH:mm`) : ``}">
           </div>`;
 };
 
@@ -46,14 +35,14 @@ const createTypeTemplate = (item) => {
   return typeTemplate.join(``);
 };
 
-const createDescriptionTemplate = (item, destination) => {
+const createDescriptionTemplate = (items) => {
   return `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-  <p class="event__destination-description">${item[destination]}</p>`;
+  <p class="event__destination-description">${items.description}</p>`;
 };
 
-const createOfferEditTemplate = (globalOffers, offersIds) => {
+const createOfferEditTemplate = (offers, offersIds) => {
 
-  const offerEditTemplate = globalOffers.map((offer, i) => {
+  const offerEditTemplate = offers.map((offer, i) => {
     return `<div class="event__offer-selector">
               <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${offersIds.includes(offer.id) ? `checked` : ``}>
               <label class="event__offer-label" for="event-offer-luggage-${i}">
@@ -71,30 +60,34 @@ const createOfferEditTemplate = (globalOffers, offersIds) => {
           </section>` : ``;
 };
 
-const createPhotoTemplate = (items, destination) => {
-  const photoTemplate = items[destination].map((item) => {
-    return `<img width="80" height="80" src="${item}" alt="">`;
+const createPhotoTemplate = (items) => {
+  const photoTemplate = items.pictures.map((item) => {
+    return `<img class="event__photo" src="${item.src}" alt="${item.description}">`;
   });
-  return photoTemplate.join(``);
+  return `<div class="event__photos-container">
+            <div class="event__photos-tape">
+              ${photoTemplate.join(``)}
+            </div>
+          </div>`;
 };
 
 const checkDates = (item) => {
-  if (item.dateEnd && item.dateStart !== ``) {
-    return item.dateEnd.isAfter(item.dateStart) ? `` : `disabled`;
-  } else {
+  if (item.dateEnd && item.dateStart && item.dateEnd.isAfter(item.dateStart)) {
     return ``;
+  } else {
+    return `disabled`;
   }
 };
 
-const createFormEditingTemplate = (data, globalOffers) => {
+const createFormEditingTemplate = (data, offers) => {
 
-  const {type, destination, price, photos, description, offersIds} = data;
+  const {type, destination, price, offersIds} = data;
 
-  const descriptionTemplate = destination ? createDescriptionTemplate(description, destination) : ``;
+  const descriptionTemplate = destination.description ? createDescriptionTemplate(destination) : ``;
   const typeTemplate = createTypeTemplate(type);
-  const offerEditTemplate = createOfferEditTemplate(globalOffers[type], offersIds);
+  const offerEditTemplate = createOfferEditTemplate(offers[type], offersIds);
   const dateTemplate = createDateTemplate(data);
-  const photosTemplate = destination ? createPhotoTemplate(photos, destination) : ``;
+  const photosTemplate = destination.pictures ? createPhotoTemplate(destination) : ``;
   const isSubmitDisabled = checkDates(data);
 
   return `<li class="trip-events__item">
@@ -117,7 +110,7 @@ const createFormEditingTemplate = (data, globalOffers) => {
                   <label class="event__label  event__type-output" for="event-destination-1">
                     ${type !== null ? type : ``}
                   </label>
-                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination !== null ? destination : ``}" list="destination-list-1">
+                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name ? destination.name : ``}" list="destination-list-1" required>
                   <datalist id="destination-list-1">
                     <option value="Amsterdam"></option>
                     <option value="Geneva"></option>
@@ -130,7 +123,7 @@ const createFormEditingTemplate = (data, globalOffers) => {
                     <span class="visually-hidden">Price</span>
                     &euro;
                   </label>
-                  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+                  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}" required>
                 </div>
                 <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled}>Save</button>
                 <button class="event__reset-btn" type="reset">Delete</button>
@@ -150,10 +143,11 @@ const createFormEditingTemplate = (data, globalOffers) => {
 };
 
 export default class FormEditView extends Smart {
-  constructor(globalOffers, waypoint = getBlank()) {
+  constructor(offersModel, destinationsModel, waypoint = getBlank()) {
     super();
 
-    this._globalOffers = globalOffers.getOffers();
+    this._offers = offersModel.getOffers();
+    this._destinations = destinationsModel.getDestinations();
 
     this._data = FormEditView.parseWaypointToData(waypoint);
     this._dateStartPicker = null;
@@ -173,7 +167,7 @@ export default class FormEditView extends Smart {
   }
 
   getTemplate() {
-    return createFormEditingTemplate(this._data, this._globalOffers);
+    return createFormEditingTemplate(this._data, this._offers, this._destinations);
   }
 
   removeElement() {
@@ -286,10 +280,10 @@ export default class FormEditView extends Smart {
   }
 
   _destinationChangeHandler(evt) {
-    if (destinations.includes(evt.target.value)) {
+    if (this._destinations[evt.target.value]) {
       evt.preventDefault();
       this.updateData({
-        destination: evt.target.value
+        destination: this._destinations[evt.target.value]
       });
       evt.target.setCustomValidity(``);
     } else {
@@ -299,7 +293,7 @@ export default class FormEditView extends Smart {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    const newOffers = this._globalOffers[this._data.type].slice();
+    const newOffers = this._offers[this._data.type].slice();
     let selectedOffers = [];
     this.getElement().querySelectorAll(`.event__offer-checkbox`)
     .forEach((element, i) => {

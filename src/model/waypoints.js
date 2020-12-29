@@ -1,6 +1,6 @@
 import Observer from "../utils/observer.js";
 
-export default class PointsModel extends Observer {
+export default class WaypointsModel extends Observer {
   constructor() {
     super();
     this._waypoints = [];

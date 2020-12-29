@@ -1,4 +1,4 @@
-import {OfferCount, offerTitles, OfferPrice, Minutes, DESCRIPTIONS_MAX_LENGTH, PhotosCount, FilterType, TimeInMs} from "./../consts.js";
+import {OfferCount, offerTitles, OfferPrice, Minutes, DESCRIPTIONS_MAX_LENGTH, PhotosCount, FilterType, TimeInMs, descriptions, destinations} from "./../consts.js";
 import dayjs from "dayjs";
 import {nanoid} from "./nanoid.js";
 
@@ -34,13 +34,17 @@ export const createRandomString = (items) => {
 };
 
 export const createPhotosArray = () => {
-  const arr = [];
+  let picturesArray = [];
+  let picture = {};
   const count = getRandomInteger(PhotosCount.MIN, PhotosCount.MAX);
   for (let i = 0; i < count; i++) {
-    const photo = `http://picsum.photos/248/152?r=${Math.random()}`;
-    arr.push(photo);
+    picture = {
+      src: `http://picsum.photos/248/152?r=${Math.random()}`,
+      description: `Lorem ipsum`
+    };
+    picturesArray.push(picture);
   }
-  return arr;
+  return picturesArray;
 };
 
 export const getRandomOffers = () => {
@@ -152,3 +156,14 @@ export const getTimeSpend = (items, data) => {
   });
   return arr;
 };
+
+export const Description = {
+  "Amsterdam": createRandomString(descriptions),
+  "Chamonix": createRandomString(descriptions),
+  "Geneva": createRandomString(descriptions)
+};
+
+export const getPictures = destinations.reduce((acc, item) => {
+  acc[item] = createPhotosArray();
+  return acc;
+}, []);

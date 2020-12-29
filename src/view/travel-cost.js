@@ -1,17 +1,17 @@
 import Abstract from "./abstract.js";
 
-const getOffersCost = (offer, waypoint) => {
+const getOffersCost = (offers, waypoint) => {
   let waypointIds = [];
   let sum = 0;
-  waypoint.map((way) => way.offersIds.forEach((off) => {
-    waypointIds.push(off);
+  waypoint.map((way) => way.offersIds.forEach((offerId) => {
+    waypointIds.push(offerId);
   }));
 
-  Object.values(offer).forEach((off) => {
-    off.forEach((of) => {
+  Object.values(offers).forEach((offer) => {
+    offer.forEach((elem) => {
       waypointIds.forEach((item) => {
-        if (of.id === item) {
-          sum += of.price;
+        if (elem.id === item) {
+          sum += elem.price;
         }
       });
     });
@@ -35,10 +35,10 @@ const createTravelCostTemplate = (waypoints, offers) => {
 };
 
 export default class TravelCostView extends Abstract {
-  constructor(waypoints, globalOffers) {
+  constructor(waypoints, offersModel) {
     super();
     this._waypoints = waypoints;
-    this._offers = globalOffers.getOffers();
+    this._offers = offersModel.getOffers();
   }
 
   getTemplate() {

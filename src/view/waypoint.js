@@ -2,8 +2,8 @@ import {getTimeInfo} from "../utils/common.js";
 import Abstract from "./abstract.js";
 import he from "he";
 
-const createOfferTemplate = (globalOffers, offersIds) => {
-  const offerTemplate = globalOffers.map((offer) => {
+const createOfferTemplate = (offers, offersIds) => {
+  const offerTemplate = offers.map((offer) => {
     return offersIds.includes(offer.id) ? `<li class="event__offer">
                           <span class="event__offer-title">${offer.title}</span>
                             &plus;&euro;&nbsp;
@@ -13,11 +13,11 @@ const createOfferTemplate = (globalOffers, offersIds) => {
   return offerTemplate.join(``);
 };
 
-const createWaypointTemplate = (waypoint, globalOffers) => {
+const createWaypointTemplate = (waypoint, offers) => {
 
   const {dateStart, dateEnd, type, destination, date, price, isFavorite, offersIds} = waypoint;
 
-  const offerTemplate = createOfferTemplate(globalOffers[type], offersIds);
+  const offerTemplate = createOfferTemplate(offers[type], offersIds);
 
   const favoriteBtnActive = isFavorite ? `event__favorite-btn--active` : ``;
 
@@ -29,7 +29,7 @@ const createWaypointTemplate = (waypoint, globalOffers) => {
               <div class="event__type">
                 <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
               </div>
-              <h3 class="event__title">${type} ${he.encode(String(destination))}</h3>
+              <h3 class="event__title">${type} ${he.encode(destination.name)}</h3>
               <div class="event__schedule">
                 <p class="event__time">
                   <time class="event__start-time" datetime="2019-03-18T10:30">${dateStart ? dateStart.format(`HH:mm`) : ``}</time>
@@ -58,17 +58,17 @@ const createWaypointTemplate = (waypoint, globalOffers) => {
 };
 
 export default class WaypointView extends Abstract {
-  constructor(waypoint, globalOffers) {
+  constructor(waypoint, offersModel) {
     super();
 
-    this._globalOffers = globalOffers;
+    this._offers = offersModel.getOffers();
     this._waypoint = waypoint;
     this._editClickHandler = this._editClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createWaypointTemplate(this._waypoint, this._globalOffers.getOffers());
+    return createWaypointTemplate(this._waypoint, this._offers);
   }
 
   _favoriteClickHandler(evt) {
