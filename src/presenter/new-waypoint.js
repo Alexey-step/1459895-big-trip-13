@@ -1,13 +1,14 @@
-import FormEditView from "./../view/form-editing.js";
-import {nanoid} from "./../utils/nanoid.js";
-import {remove, render, renderPosition} from "./../utils/render.js";
-import {UserAction, UpdateType} from "./../consts.js";
+import FormEditView from "../view/form-editing.js";
+import {nanoid} from "../utils/nanoid.js";
+import {remove, render, renderPosition} from "../utils/render.js";
+import {UserAction, UpdateType} from "../consts.js";
 
-export default class WaypointNewPresenter {
-  constructor(listContainer, changeData, offersModel) {
+export default class NewWaypointPresenter {
+  constructor(listContainer, changeData, offersModel, destinationsModel) {
     this._listContainer = listContainer;
     this._changeData = changeData;
-    this._offers = offersModel;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
 
     this._waypointEditComponent = null;
 
@@ -22,7 +23,7 @@ export default class WaypointNewPresenter {
       return;
     }
 
-    this._waypointEditComponent = new FormEditView(this._offers);
+    this._waypointEditComponent = new FormEditView(this._offersModel, this._destinationsModel);
     this._waypointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._waypointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._waypointEditComponent.setEditCloseClickHandler(this._handleCloseEditClick);
@@ -49,7 +50,6 @@ export default class WaypointNewPresenter {
         UpdateType.MINOR,
         Object.assign({id: nanoid()}, waypoint)
     );
-    this.destroy();
     document.querySelector(`.trip-main__event-add-btn`).disabled = false;
   }
 

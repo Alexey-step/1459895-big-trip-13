@@ -3,10 +3,11 @@ import {UpdateType} from "../consts.js";
 import {render, renderPosition, replace, remove} from "../utils/render.js";
 
 export default class FilterPresenter {
-  constructor(filterContainer, filterModel) {
+  constructor(filterContainer, filterModel, waypointsModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._currentFilter = null;
+    this._waypointsModel = waypointsModel;
 
     this._filterComponent = null;
 
@@ -18,10 +19,11 @@ export default class FilterPresenter {
 
   init() {
     this._currentFilter = this._filterModel.getFilter();
+    const waypoints = this._waypointsModel.getWaypoints();
 
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new FilterView();
+    this._filterComponent = new FilterView(waypoints, this._currentFilter);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {

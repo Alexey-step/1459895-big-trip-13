@@ -1,11 +1,13 @@
 import dayjs from "dayjs";
-import {getRandomInteger, getRandomElement, createRandomString, createPhotosArray} from "./../utils/common.js";
-import {WAYPOINT_TYPE, DESTINATION, PRICE, timeHours, timeMinutes, DESCRIPTION} from "./../consts.js";
+
+import {getRandomInteger, getRandomElement, Description, getPictures} from "../utils/common.js";
+import {waypointTypes, destinations, PRICE, TimeHours, TimeMinutes} from "../consts.js";
+
 import {nanoid} from "./../utils/nanoid.js";
 
 const getRandomTime = (item) => {
-  const hoursGap = getRandomInteger(timeHours.MIN, timeHours.MAX);
-  const minuteGap = getRandomInteger(timeMinutes.MIN, timeMinutes.MAX);
+  const hoursGap = getRandomInteger(TimeHours.MIN, TimeHours.MAX);
+  const minuteGap = getRandomInteger(TimeMinutes.MIN, TimeMinutes.MAX);
 
   return dayjs(item).hour(hoursGap).minute(minuteGap);
 };
@@ -18,8 +20,8 @@ const generateDate = () => {
 };
 
 const getDateEnd = (dateStart) => {
-  const hoursGap = getRandomInteger(timeHours.MIN, timeHours.MAX);
-  const minuteGap = getRandomInteger(timeMinutes.MIN, timeMinutes.MAX);
+  const hoursGap = getRandomInteger(TimeHours.MIN, TimeHours.MAX);
+  const minuteGap = getRandomInteger(TimeMinutes.MIN, TimeMinutes.MAX);
 
   return dateStart.add(hoursGap, `h`).add(minuteGap, `m`);
 };
@@ -29,23 +31,19 @@ export const generateWaypoint = (offers) => {
   const dateStart = getRandomTime(newDate);
   const date = dateStart;
   const dateEnd = getDateEnd(dateStart);
-  const type = getRandomElement(WAYPOINT_TYPE);
-  const destination = getRandomElement(DESTINATION);
+  const type = getRandomElement(waypointTypes);
+
+  const destinationName = getRandomElement(destinations);
+
+  const destination = {
+    description: Description[destinationName],
+    name: destinationName,
+    pictures: getPictures[destinationName]
+  };
 
   const offersIds = offers[type]
   .filter(() => getRandomInteger(0, 2) === 1)
   .map((offer) => offer.id);
-
-  const description = {
-    "Amsterdam": createRandomString(DESCRIPTION),
-    "Chamonix": createRandomString(DESCRIPTION),
-    "Geneva": createRandomString(DESCRIPTION)
-  };
-  const photos = {
-    "Amsterdam": createPhotosArray(),
-    "Chamonix": createPhotosArray(),
-    "Geneva": createPhotosArray()
-  };
 
   return {
     id: nanoid(),
@@ -53,8 +51,6 @@ export const generateWaypoint = (offers) => {
     dateEnd,
     type,
     destination,
-    description,
-    photos,
     date,
     price: getRandomInteger(PRICE.MIN, PRICE.MAX),
     isFavorite: Boolean(getRandomInteger(0, 1)),

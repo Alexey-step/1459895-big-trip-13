@@ -1,39 +1,41 @@
-import RouteInfoView from "./../view/route-info.js";
-import TravelCostView from "./../view/travel-cost.js";
-import SortView from "./../view/sort.js";
-import ListView from "./../view/list.js";
-import NoWaypointsView from "./../view/nowaypoints.js";
-import PointPresenter from "./point.js";
-import WaypointNewPresenter from "./new-waypoint.js";
-import {render, renderPosition, remove} from "./../utils/render.js";
-import {sortWaypointsByTime, filter} from "./../../src/utils/common.js";
-import {SortType, UpdateType, UserAction, FilterType} from "./../consts.js";
+import RouteInfoView from "../view/route-info.js";
+import TravelCostView from "../view/travel-cost.js";
+import SortView from "../view/sort.js";
+import ListView from "../view/list.js";
+import NoWaypointsView from "../view/nowaypoints.js";
+import WaypointPresenter from "./waypoint.js";
+import NewWaypointPresenter from "./new-waypoint.js";
+import {render, renderPosition, remove} from "../utils/render.js";
+import {sortWaypointsByTime, filter} from "../../src/utils/common.js";
+import {SortType, UpdateType, UserAction, FilterType} from "../consts.js";
 
 export default class TripPresenter {
-  constructor(tripmainContainer, tripEventsContainer, pointsModel, filterModel, offersModel) {
-    this._tripmainContainer = tripmainContainer;
+  constructor(tripMainContainer, tripEventsContainer, waypointsModel, filterModel, offersModel, destinationsModel) {
+    this._tripMainContainer = tripMainContainer;
     this._tripEventsContainer = tripEventsContainer;
-    this._pointPresenter = {};
+    this._waypointPresenter = {};
     this._currentSortType = SortType.DAY;
-    this._pointsModel = pointsModel;
+    this._waypointsModel = waypointsModel;
     this._filterModel = filterModel;
     this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
 
     this._sortComponent = null;
     this._listComponent = new ListView();
     this._noWaypointsComponent = new NoWaypointsView();
-    this._routeInfoComponent = new RouteInfoView(this._getWaypoints());
-    this._travelCostComponent = new TravelCostView(this._getWaypoints());
+    this._routeInfoComponent = new RouteInfoView(waypointsModel.getWaypoints());
+    this._travelCostComponent = new TravelCostView(waypointsModel.getWaypoints(), this._offersModel);
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
 
-    this._pointsModel.addObserver(this._handleModelEvent);
+
+    this._waypointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
 
-    this._waypointNewPresenter = new WaypointNewPresenter(this._listComponent, this._handleViewAction, this._offersModel);
+    this._newWaypointPresenter = new NewWaypointPresenter(this._listComponent, this._handleViewAction, this._offersModel, this._destinationsModel);
   }
 
   init() {
@@ -41,15 +43,30 @@ export default class TripPresenter {
     this._renderTrip();
   }
 
+  hide() {
+    this._tripEventsContainer.hide();
+    this._setDefault();
+  }
+
+  show() {
+    this._tripEventsContainer.show();
+
+  }
+
+  _setDefault() {
+    this._currentSortType = SortType.DAY;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+  }
+
   createWaypoint() {
     this._currentSortType = SortType.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._waypointNewPresenter.init();
+    this._newWaypointPresenter.init();
   }
 
   _getWaypoints() {
     const filterType = this._filterModel.getFilter();
-    const waypoints = this._pointsModel.getWaypoints();
+    const waypoints = this._waypointsModel.getWaypoints();
     const filtredWaypoints = filter[filterType](waypoints);
 
     switch (this._currentSortType) {
@@ -74,6 +91,8 @@ export default class TripPresenter {
       this._renderSort();
       this._renderList();
       this._renderWaypoints(this._getWaypoints());
+      this._routeInfoComponent = new RouteInfoView(this._getWaypoints());
+      this._travelCostComponent = new TravelCostView(this._getWaypoints(), this._offersModel);
       this._renderRouteInfo();
     }
   }
@@ -85,22 +104,22 @@ export default class TripPresenter {
   }
 
   _handleModeChange() {
-    this._waypointNewPresenter.destroy();
+    this._newWaypointPresenter.destroy();
     Object
-      .values(this._pointPresenter)
+      .values(this._waypointPresenter)
       .forEach((presenter) => presenter.resetView());
   }
 
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_WAYPOINT:
-        this._pointsModel.updateWaypoint(updateType, update);
+        this._waypointsModel.updateWaypoint(updateType, update);
         break;
       case UserAction.ADD_WAYPOINT:
-        this._pointsModel.addWaypoint(updateType, update);
+        this._waypointsModel.addWaypoint(updateType, update);
         break;
       case UserAction.DELETE_WAYPOINT:
-        this._pointsModel.deleteWaypoint(updateType, update);
+        this._waypointsModel.deleteWaypoint(updateType, update);
         break;
     }
   }
@@ -108,7 +127,7 @@ export default class TripPresenter {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._pointPresenter[data.id].init(data);
+        this._waypointPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
         this._clearTrip();
@@ -122,9 +141,9 @@ export default class TripPresenter {
   }
 
   _renderWaypoint(waypoint) {
-    const pointPresenter = new PointPresenter(this._listComponent, this._handleModeChange, this._handleViewAction, this._offersModel);
+    const pointPresenter = new WaypointPresenter(this._listComponent, this._handleModeChange, this._handleViewAction, this._offersModel, this._destinationsModel);
     pointPresenter.init(waypoint);
-    this._pointPresenter[waypoint.id] = pointPresenter;
+    this._waypointPresenter[waypoint.id] = pointPresenter;
   }
 
   _renderSort() {
@@ -147,11 +166,11 @@ export default class TripPresenter {
   }
 
   _clearTrip({resetSortType = false} = {}) {
-    this._waypointNewPresenter.destroy();
+    this._newWaypointPresenter.destroy();
     Object
-    .values(this._pointPresenter)
+    .values(this._waypointPresenter)
     .forEach((presenter) => presenter.destroy());
-    this._pointPresenter = {};
+    this._waypointPresenter = {};
 
     remove(this._sortComponent);
     remove(this._noWaypointsComponent);
@@ -165,7 +184,7 @@ export default class TripPresenter {
   }
 
   _renderRouteInfo() {
-    render(this._tripmainContainer, this._routeInfoComponent, renderPosition.AFTERBEGIN);
+    render(this._tripMainContainer, this._routeInfoComponent, renderPosition.AFTERBEGIN);
     render(this._routeInfoComponent, this._travelCostComponent, renderPosition.BEFOREEND);
   }
 

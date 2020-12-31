@@ -1,17 +1,9 @@
-const OFFER_KEYS = [
-  `Flight`,
-  `Taxi`,
-  `Drive`,
-  `Sightseeing`,
-  `Check-in`
-];
-
-const offersCount = {
+const OfferCount = {
   MIN: 0,
   MAX: 5
 };
 
-const offerTitle = [
+const offerTitles = [
   `Add luggage`,
   `Switch to comfort`,
   `Order Uber`,
@@ -25,12 +17,12 @@ const offerTitle = [
   `Buy map`
 ];
 
-const offerPrice = {
+const OfferPrice = {
   MIN: 20,
   MAX: 100
 };
 
-const WAYPOINT_TYPE = [
+const waypointTypes = [
   `Taxi`,
   `Bus`,
   `Train`,
@@ -43,30 +35,30 @@ const WAYPOINT_TYPE = [
   `Restaurant`
 ];
 
-const DESTINATION = [
+const destinations = [
   `Amsterdam`,
   `Chamonix`,
   `Geneva`,
 ];
 
-const DESCRIPTION_MAX_LENGTH = 5;
+const DESCRIPTIONS_MAX_LENGTH = 5;
 
 const PRICE = {
   MAX: 1000,
   MIN: 100
 };
 
-const timeHours = {
+const TimeHours = {
   MIN: 0,
   MAX: 24
 };
 
-const timeMinutes = {
+const TimeMinutes = {
   MIN: 0,
   MAX: 60
 };
 
-const DESCRIPTION = [
+const descriptions = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
   `Fusce tristique felis at fermentum pharetra.`,
@@ -78,14 +70,18 @@ const DESCRIPTION = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
-const photosCount = {
+const PhotosCount = {
   MIN: 1,
   MAX: 5
 };
 
-const minutes = {
+const Minutes = {
   IN_DAY: 1440,
   IN_HOUR: 60
+};
+
+const TimeInMs = {
+  DAY: 86400000,
 };
 
 const SortType = {
@@ -112,22 +108,45 @@ const FilterType = {
   PAST: `past`
 };
 
+const MenuItem = {
+  TABLE: `Table`,
+  STATS: `Stats`
+};
+
+const ChartConfigs = {
+  TYPE: `horizontalBar`,
+  BACKGROUND_COLOR: `#ffffff`,
+  BAR_HEIGHT: 55,
+  FONT_SIZE: 13,
+  TITLE_FONT_SIZE: 23,
+  MONEY_CHART_TITLE: `MONEY`,
+  TRANSPORT_CHART_TITLE: `TYPE`,
+  TIME_SPEND_CHART_TITLE: `TIME-SPEND`,
+  COLOR: `#000000`,
+  BAR_THICKNESS: 44,
+  PADDING: 5,
+  MIN_BAR_LENGTH: 50,
+  PADDING_LEFT: 35
+};
+
 export {
-  OFFER_KEYS,
-  offersCount,
-  offerTitle,
-  offerPrice,
-  WAYPOINT_TYPE,
-  DESTINATION,
+  OfferCount,
+  offerTitles,
+  OfferPrice,
+  waypointTypes,
+  destinations,
   PRICE,
-  DESCRIPTION_MAX_LENGTH,
-  timeHours,
-  timeMinutes,
-  DESCRIPTION,
-  photosCount,
-  minutes,
+  DESCRIPTIONS_MAX_LENGTH,
+  TimeHours,
+  TimeMinutes,
+  descriptions,
+  PhotosCount,
+  Minutes,
   SortType,
   UserAction,
   UpdateType,
-  FilterType
+  FilterType,
+  MenuItem,
+  TimeInMs,
+  ChartConfigs
 };

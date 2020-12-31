@@ -1,13 +1,13 @@
 import Abstract from "./abstract.js";
 
 const getRouteInfo = (items) => {
-  let destinationStr = `${items[0].destination}`;
+  let destinationStr = `${items[0].destination.name}`;
   if (items.length > 3) {
-    destinationStr += ` &mdash; ... &mdash; ${items[items.length - 1].destination}`;
+    destinationStr += ` &mdash; ... &mdash; ${items[items.length - 1].destination.name}`;
     return destinationStr;
   }
   for (let i = 1; i < items.length; i++) {
-    destinationStr += ` &mdash; ${items[i].destination}`;
+    destinationStr += ` &mdash; ${items[i].destination.name}`;
   }
   return destinationStr;
 };
@@ -30,12 +30,13 @@ const createRouteInfoTemplate = (items) => {
 };
 
 export default class RouteInfoView extends Abstract {
-  constructor(waypoint) {
+  constructor(waypoints) {
     super();
-    this._waypoint = waypoint;
+
+    this._waypoints = waypoints;
   }
 
   getTemplate() {
-    return createRouteInfoTemplate(this._waypoint);
+    return createRouteInfoTemplate(this._waypoints);
   }
 }

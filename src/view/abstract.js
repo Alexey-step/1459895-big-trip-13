@@ -1,4 +1,4 @@
-import {createElement} from "./../utils/common.js";
+import {createElement} from "../utils/common.js";
 
 export default class Abstract {
   constructor() {
@@ -24,5 +24,17 @@ export default class Abstract {
 
   removeElement() {
     this._element = null;
+  }
+
+  show() {
+    if (this._element) {
+      this._element.classList.remove(`visually-hidden`);
+    }
+  }
+
+  hide() {
+    if (this._element) {
+      this._element.classList.add(`visually-hidden`);
+    }
   }
 }
