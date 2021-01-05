@@ -2,22 +2,23 @@ import {getTimeInfo} from "../utils/common.js";
 import Abstract from "./abstract.js";
 import he from "he";
 
-const createOfferTemplate = (offers, offersIds) => {
-  const offerTemplate = offers.map((offer) => {
-    return offersIds.includes(offer.id) ? `<li class="event__offer">
+const createOfferTemplate = (offers) => {
+  const offersTemplate = offers.length !== 0 ? offers.map((offer) => {
+    return `<li class="event__offer">
                           <span class="event__offer-title">${offer.title}</span>
                             &plus;&euro;&nbsp;
                           <span class="event__offer-price">${offer.price}</span>
-                        </li>` : ``;
-  });
-  return offerTemplate.join(``);
+                        </li>`;
+  }) : ``;
+  return offersTemplate !== `` ? offersTemplate.join(``) : ``;
 };
 
-const createWaypointTemplate = (waypoint, offers) => {
 
-  const {dateStart, dateEnd, type, destination, date, price, isFavorite, offersIds} = waypoint;
+const createWaypointTemplate = (waypoint) => {
 
-  const offerTemplate = createOfferTemplate(offers[type], offersIds);
+  const {dateStart, dateEnd, type, destination, price, isFavorite, offers} = waypoint;
+
+  const offerTemplate = createOfferTemplate(offers);
 
   const favoriteBtnActive = isFavorite ? `event__favorite-btn--active` : ``;
 
@@ -25,9 +26,9 @@ const createWaypointTemplate = (waypoint, offers) => {
 
   return `<li class="trip-events__item">
             <div class="event">
-              <time class="event__date" datetime="2019-03-18">${date ? date.format(`D MMM`) : ``}</time>
+              <time class="event__date" datetime="2019-03-18">${dateStart ? dateStart.format(`D MMM`) : ``}</time>
               <div class="event__type">
-                <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+                <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
               </div>
               <h3 class="event__title">${type} ${he.encode(destination.name)}</h3>
               <div class="event__schedule">
@@ -58,17 +59,16 @@ const createWaypointTemplate = (waypoint, offers) => {
 };
 
 export default class WaypointView extends Abstract {
-  constructor(waypoint, offersModel) {
+  constructor(waypoint) {
     super();
 
-    this._offers = offersModel.getOffers();
     this._waypoint = waypoint;
     this._editClickHandler = this._editClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createWaypointTemplate(this._waypoint, this._offers);
+    return createWaypointTemplate(this._waypoint);
   }
 
   _favoriteClickHandler(evt) {

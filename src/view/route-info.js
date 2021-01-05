@@ -13,7 +13,7 @@ const getRouteInfo = (items) => {
 };
 
 const createRouteDateTemplate = (items) => {
-  return `<p class="trip-info__dates">${items[0].date.format(`MMM DD`)}&nbsp;&mdash;&nbsp;${items[items.length - 1].date.format(`DD`)}</p>`;
+  return `<p class="trip-info__dates">${items[0].dateStart.format(`DD MMM`)}&nbsp;&mdash;&nbsp;${items[items.length - 1].dateStart.format(`DD MMM`)}</p>`;
 };
 
 const createRouteInfoTemplate = (items) => {

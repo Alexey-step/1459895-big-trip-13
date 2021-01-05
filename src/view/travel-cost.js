@@ -1,33 +1,22 @@
 import Abstract from "./abstract.js";
 
-const getOffersCost = (offers, waypoint) => {
-  let waypointIds = [];
-  let sum = 0;
-  waypoint.map((way) => way.offersIds.forEach((offerId) => {
-    waypointIds.push(offerId);
-  }));
-
-  Object.values(offers).forEach((offer) => {
-    offer.forEach((elem) => {
-      waypointIds.forEach((item) => {
-        if (elem.id === item) {
-          sum += elem.price;
-        }
-      });
-    });
-  });
-  return sum;
+const getOffersCost = (waypoints) => {
+  let waypointsOffersPrice = [];
+  let offersCost = 0;
+  waypointsOffersPrice = waypoints.map((waypoint) => waypoint.offers.reduce((acc, offer) => acc + offer.price, 0));
+  offersCost = waypointsOffersPrice.reduce((acc, price) => acc + price, 0);
+  return offersCost;
 };
 
-const getTravelCost = (points, offers) => {
-  const basePriceCosts = points.reduce((acc, point) => acc + Number(point.price), 0);
-  const offersCost = getOffersCost(offers, points);
+const getTravelCost = (waypoints) => {
+  const basePriceCosts = waypoints.reduce((acc, waypoint) => acc + Number(waypoint.price), 0);
+  const offersCost = getOffersCost(waypoints);
   return basePriceCosts + offersCost;
 };
 
-const createTravelCostTemplate = (waypoints, offers) => {
+const createTravelCostTemplate = (waypoints) => {
 
-  const travelCost = getTravelCost(waypoints, offers);
+  const travelCost = getTravelCost(waypoints);
 
   return `<p class="trip-info__cost">
             Total: &euro;&nbsp;<span class="trip-info__cost-value">${travelCost}</span>
@@ -35,14 +24,13 @@ const createTravelCostTemplate = (waypoints, offers) => {
 };
 
 export default class TravelCostView extends Abstract {
-  constructor(waypoints, offersModel) {
+  constructor(waypoints) {
     super();
     this._waypoints = waypoints;
-    this._offers = offersModel.getOffers();
   }
 
   getTemplate() {
-    return createTravelCostTemplate(this._waypoints, this._offers);
+    return createTravelCostTemplate(this._waypoints);
   }
 }
 

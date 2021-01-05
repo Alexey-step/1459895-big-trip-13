@@ -34,7 +34,7 @@ export default class WaypointPresenter {
     const prevWaypointComponent = this._waypointComponent;
     const prevFormEditComponent = this._formEditComponent;
 
-    this._waypointComponent = new WaypointView(waypoint, this._offersModel);
+    this._waypointComponent = new WaypointView(waypoint);
     this._formEditComponent = new FormEditView(this._offersModel, this._destinationsModel, waypoint);
 
     this._waypointComponent.setEditClickHandler(this._handleEditClick);

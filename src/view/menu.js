@@ -33,7 +33,9 @@ export default class MenuView extends Abstract {
     const checkedElement = this.getElement().querySelector(`[data-menu-type=${menuItem}]`);
     const activeElement = this.getElement().querySelector(`.trip-tabs__btn--active`);
 
-    checkedElement.classList.add(`trip-tabs__btn--active`);
-    activeElement.classList.remove(`trip-tabs__btn--active`);
+    if (checkedElement !== null && activeElement !== null) {
+      activeElement.classList.remove(`trip-tabs__btn--active`);
+      checkedElement.classList.add(`trip-tabs__btn--active`);
+    }
   }
 }

@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 const getPastWaypoints = (items) => {
   let sum = 0;
   items.forEach((item) => {
-    if (item.date < dayjs()) {
+    if (item.dateStart < dayjs()) {
       sum++;
     }
   });
@@ -15,7 +15,7 @@ const getPastWaypoints = (items) => {
 const getFutureWaypoints = (items) => {
   let sum = 0;
   items.forEach((item) => {
-    if (item.date > dayjs()) {
+    if (item.dateStart > dayjs()) {
       sum++;
     }
   });

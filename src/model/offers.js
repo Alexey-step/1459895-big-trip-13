@@ -6,11 +6,22 @@ export default class OffersModel extends Observer {
     this._offers = [];
   }
 
-  setOffers(offers) {
+  setOffers(updateType, offers) {
     this._offers = offers;
+
+    this._notify(updateType);
   }
 
   getOffers() {
     return this._offers;
+  }
+
+  static adaptToClient(offers) {
+    const adaptedOffers = offers.reduce((acc, item) => {
+      acc[item.type] = item.offers;
+      return acc;
+    }, []);
+
+    return adaptedOffers;
   }
 }

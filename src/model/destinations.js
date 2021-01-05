@@ -6,11 +6,22 @@ export default class DestinationsModel extends Observer {
     this._destinations = {};
   }
 
-  setDestinations(destinations) {
+  setDestinations(updateType, destinations) {
     this._destinations = destinations;
+
+    this._notify(updateType);
   }
 
   getDestinations() {
     return this._destinations;
+  }
+
+  static adaptToClient(destinations) {
+    const adaptedDestination = destinations.reduce((acc, item) => {
+      acc[item.name] = item;
+      return acc;
+    }, {});
+
+    return adaptedDestination;
   }
 }
