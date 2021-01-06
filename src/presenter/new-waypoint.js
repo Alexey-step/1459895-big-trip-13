@@ -1,5 +1,4 @@
 import FormEditView from "../view/form-editing.js";
-import {nanoid} from "../utils/nanoid.js";
 import {remove, render, renderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../consts.js";
 
@@ -18,7 +17,8 @@ export default class NewWaypointPresenter {
     this._handleCloseEditClick = this._handleCloseEditClick.bind(this);
   }
 
-  init() {
+  init(callback) {
+    this._disabledCallback = callback;
     if (this._waypointEditComponent !== null) {
       return;
     }
@@ -38,6 +38,10 @@ export default class NewWaypointPresenter {
       return;
     }
 
+    if (this._disabledCallback !== null) {
+      this._disabledCallback();
+    }
+
     remove(this._waypointEditComponent);
     this._waypointEditComponent = null;
 
@@ -48,27 +52,42 @@ export default class NewWaypointPresenter {
     this._changeData(
         UserAction.ADD_WAYPOINT,
         UpdateType.MINOR,
-        Object.assign({id: nanoid()}, waypoint)
+        waypoint
     );
-    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
   }
 
   _handleCloseEditClick() {
     this.destroy();
-    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
   }
 
   _handleDeleteClick() {
     this.destroy();
-    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
   }
 
   _escKeyDownHandler(evt) {
     if (evt.key === `Esc` || evt.key === `Escape`) {
       evt.preventDefault();
       this.destroy();
-      document.querySelector(`.trip-main__event-add-btn`).disabled = false;
     }
+  }
+
+  setSaving() {
+    this._waypointEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._waypointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this._waypointEditComponent.shake(resetFormState);
   }
 
 }

@@ -1,12 +1,7 @@
 import FormEditView from "../view/form-editing.js";
 import WaypointView from "../view/waypoint.js";
 import {render, renderPosition, replace, remove} from "../utils/render.js";
-import {UserAction, UpdateType} from "../consts.js";
-
-const Mode = {
-  DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`
-};
+import {UserAction, UpdateType, Mode, State} from "../consts.js";
 
 export default class WaypointPresenter {
   constructor(listContainer, changeMode, changeData, offersModel, destinationsModel) {
@@ -53,11 +48,41 @@ export default class WaypointPresenter {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._formEditComponent, prevFormEditComponent);
+      replace(this._waypointComponent, prevFormEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevWaypointComponent);
     remove(prevFormEditComponent);
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._formEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._formEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._formEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._waypointComponent.shake(resetFormState);
+        this._formEditComponent.shake(resetFormState);
+        break;
+    }
   }
 
   _replaceWaypointToForm() {
@@ -93,7 +118,6 @@ export default class WaypointPresenter {
 
   _handleFormSubmit(waypoint) {
     this._changeData(UserAction.UPDATE_WAYPOINT, UpdateType.MINOR, waypoint);
-    this._replaceFormToWaypoint();
   }
 
   _handleFavoriteClick() {

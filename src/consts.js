@@ -79,6 +79,19 @@ const ChartConfigs = {
 const AUTHORIZATION = `Basic kD3cu7weGaso2fk9z`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};
+
+const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
+
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export {
   waypointTypes,
   TimeHours,
@@ -92,5 +105,8 @@ export {
   TimeInMs,
   ChartConfigs,
   AUTHORIZATION,
-  END_POINT
+  END_POINT,
+  Mode,
+  State,
+  SHAKE_ANIMATION_TIMEOUT
 };

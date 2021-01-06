@@ -1,4 +1,5 @@
 import {createElement} from "../utils/common.js";
+import {SHAKE_ANIMATION_TIMEOUT} from "../consts.js";
 
 export default class Abstract {
   constructor() {
@@ -36,5 +37,13 @@ export default class Abstract {
     if (this._element) {
       this._element.classList.add(`visually-hidden`);
     }
+  }
+
+  shake(callback) {
+    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+      callback();
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 }
