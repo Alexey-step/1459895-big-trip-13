@@ -1,6 +1,5 @@
-import {OfferCount, offerTitles, OfferPrice, Minutes, DESCRIPTIONS_MAX_LENGTH, PhotosCount, FilterType, TimeInMs, descriptions, destinations} from "./../consts.js";
+import {Minutes, FilterType, TimeInMs} from "./../consts.js";
 import dayjs from "dayjs";
-import {nanoid} from "./nanoid.js";
 
 export const getTimeInfo = (dateEnd, dateStart) => {
   let timeStr = ``;
@@ -23,68 +22,11 @@ export const getTimeInfo = (dateEnd, dateStart) => {
   return timeStr;
 };
 
-export const createRandomString = (items) => {
-  let arr = [];
-  let cloneArr = [].concat(items);
-  let arrRandomLength = Math.floor(Math.random() * DESCRIPTIONS_MAX_LENGTH + 1);
-  while (arr.length < arrRandomLength) {
-    arr.push(getUniqueItem(cloneArr));
-  }
-  return arr.join(` `);
-};
-
-export const createPhotosArray = () => {
-  let picturesArray = [];
-  let picture = {};
-  const count = getRandomInteger(PhotosCount.MIN, PhotosCount.MAX);
-  for (let i = 0; i < count; i++) {
-    picture = {
-      src: `http://picsum.photos/248/152?r=${Math.random()}`,
-      description: `Lorem ipsum`
-    };
-    picturesArray.push(picture);
-  }
-  return picturesArray;
-};
-
-export const getRandomOffers = () => {
-  let offersArr = [];
-  let offer = {};
-  const offerCount = getRandomInteger(OfferCount.MIN, OfferCount.MAX);
-  const offerTitlesClone = [].concat(offerTitles);
-  for (let i = 0; i < offerCount; i++) {
-    offer = {
-      id: nanoid(),
-      title: getUniqueItem(offerTitlesClone),
-      price: getRandomInteger(OfferPrice.MIN, OfferPrice.MAX)
-    };
-    offersArr.push(offer);
-  }
-  return offersArr;
-};
-
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
 
   return newElement.firstChild;
-};
-
-export const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-export const getRandomElement = (items) => {
-  return items[getRandomInteger(0, items.length - 1)];
-};
-
-export const getUniqueItem = (items) => {
-  const b = getRandomElement(items);
-  items.splice(items.indexOf(b), 1);
-  return b;
 };
 
 export const sortWaypointsByTime = (itemsA, itemsB) => {
@@ -102,13 +44,13 @@ export const sortWaypointsByTime = (itemsA, itemsB) => {
 
 export const filter = {
   [FilterType.EVERYTHING]: (waypoints) => waypoints,
-  [FilterType.FUTURE]: (waypoints) => waypoints.filter((waypoint) => waypoint.date > dayjs()),
-  [FilterType.PAST]: (waypoints) => waypoints.filter((waypoint) => waypoint.date < dayjs())
+  [FilterType.FUTURE]: (waypoints) => waypoints.filter((waypoint) => waypoint.dateStart > dayjs()),
+  [FilterType.PAST]: (waypoints) => waypoints.filter((waypoint) => waypoint.dateStart < dayjs())
 };
 
 export const makeUniqWaypointTypes = (items) => {
   let arr = [];
-  items.forEach((item) => arr.push(item.type.toUpperCase()));
+  items.forEach((item) => arr.push(item.type));
   return [...new Set(arr)];
 };
 
@@ -117,7 +59,7 @@ export const getTypesCost = (items, data) => {
   let sum = 0;
   items.forEach((item) => {
     data.forEach((point) => {
-      if (point.type.toUpperCase() === item) {
+      if (point.type === item) {
         sum += point.price;
       }
     });
@@ -132,7 +74,7 @@ export const getTypesCount = (items, data) => {
   let sum = 0;
   items.forEach((item) => {
     data.forEach((point) => {
-      if (point.type.toUpperCase() === item) {
+      if (point.type === item) {
         sum++;
       }
     });
@@ -147,7 +89,7 @@ export const getTimeSpend = (items, data) => {
   let sum = 0;
   items.forEach((item) => {
     data.forEach((point) => {
-      if (point.type.toUpperCase() === item) {
+      if (point.type === item) {
         sum += (point.dateEnd.diff(point.dateStart)) / TimeInMs.DAY;
       }
     });
@@ -156,14 +98,3 @@ export const getTimeSpend = (items, data) => {
   });
   return arr;
 };
-
-export const Description = {
-  "Amsterdam": createRandomString(descriptions),
-  "Chamonix": createRandomString(descriptions),
-  "Geneva": createRandomString(descriptions)
-};
-
-export const getPictures = destinations.reduce((acc, item) => {
-  acc[item] = createPhotosArray();
-  return acc;
-}, []);

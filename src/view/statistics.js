@@ -250,10 +250,10 @@ const createStatisticsTemplate = () => {
 };
 
 export default class StatisticsView extends Smart {
-  constructor(waypoints) {
+  constructor(waypointsModel) {
     super();
 
-    this._waypoints = waypoints;
+    this._waypoints = waypointsModel.getWaypoints();
 
     this._moneyChart = null;
     this._transportChart = null;
@@ -271,17 +271,7 @@ export default class StatisticsView extends Smart {
 
   hide() {
     super.hide();
-    this.removeElement();
-  }
-
-  removeElement() {
-    super.removeElement();
-
-    if (this._moneyChart !== null || this._transportChart !== null || this._timeSpendChart !== null) {
-      this._moneyChart = null;
-      this._transportChart = null;
-      this._timeSpendChart = null;
-    }
+    this._removeElement();
   }
 
   _setCharts() {
@@ -299,5 +289,15 @@ export default class StatisticsView extends Smart {
     this._moneyChart = renderMoneyChart(moneyCtx, this._waypoints);
     this._transportChart = renderTypeChart(typeCtx, this._waypoints);
     this._timeSpendChart = renderTimeSpendChart(timeCtx, this._waypoints);
+  }
+
+  _removeElement() {
+    super.removeElement();
+
+    if (this._moneyChart !== null || this._transportChart !== null || this._timeSpendChart !== null) {
+      this._moneyChart = null;
+      this._transportChart = null;
+      this._timeSpendChart = null;
+    }
   }
 }

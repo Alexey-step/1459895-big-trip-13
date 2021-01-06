@@ -1,52 +1,15 @@
-const OfferCount = {
-  MIN: 0,
-  MAX: 5
-};
-
-const offerTitles = [
-  `Add luggage`,
-  `Switch to comfort`,
-  `Order Uber`,
-  `Rent a Car`,
-  `Add breakfast`,
-  `Book tickets`,
-  `Lunch in city`,
-  `Uber, buisness`,
-  `Uber, comfort`,
-  `Car with driver`,
-  `Buy map`
-];
-
-const OfferPrice = {
-  MIN: 20,
-  MAX: 100
-};
-
 const waypointTypes = [
-  `Taxi`,
-  `Bus`,
-  `Train`,
-  `Ship`,
-  `Transport`,
-  `Drive`,
-  `Flight`,
-  `Check-in`,
-  `Sightseeing`,
-  `Restaurant`
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+  `check-in`,
+  `sightseeing`,
+  `restaurant`
 ];
-
-const destinations = [
-  `Amsterdam`,
-  `Chamonix`,
-  `Geneva`,
-];
-
-const DESCRIPTIONS_MAX_LENGTH = 5;
-
-const PRICE = {
-  MAX: 1000,
-  MIN: 100
-};
 
 const TimeHours = {
   MIN: 0,
@@ -56,23 +19,6 @@ const TimeHours = {
 const TimeMinutes = {
   MIN: 0,
   MAX: 60
-};
-
-const descriptions = [
-  `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-  `Cras aliquet varius magna, non porta ligula feugiat eget.`,
-  `Fusce tristique felis at fermentum pharetra.`,
-  `Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-  `Sed sed nisi sed augue convallis suscipit in sed felis.`,
-  `Aliquam erat volutpat.`,
-  `fermentum tortor ac porta dapibus.`,
-  `In rutrum ac purus sit amet tempus.`
-];
-
-const PhotosCount = {
-  MIN: 1,
-  MAX: 5
 };
 
 const Minutes = {
@@ -99,7 +45,8 @@ const UserAction = {
 const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  INIT: `INIT`
 };
 
 const FilterType = {
@@ -129,18 +76,13 @@ const ChartConfigs = {
   PADDING_LEFT: 35
 };
 
+const AUTHORIZATION = `Basic kD3cu7weGaso2fk9z`;
+const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
+
 export {
-  OfferCount,
-  offerTitles,
-  OfferPrice,
   waypointTypes,
-  destinations,
-  PRICE,
-  DESCRIPTIONS_MAX_LENGTH,
   TimeHours,
   TimeMinutes,
-  descriptions,
-  PhotosCount,
   Minutes,
   SortType,
   UserAction,
@@ -148,5 +90,7 @@ export {
   FilterType,
   MenuItem,
   TimeInMs,
-  ChartConfigs
+  ChartConfigs,
+  AUTHORIZATION,
+  END_POINT
 };

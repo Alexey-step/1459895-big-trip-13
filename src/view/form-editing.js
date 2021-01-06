@@ -10,7 +10,7 @@ const getBlank = () => {
     type: `Taxi`,
     destination: {},
     price: ``,
-    offersIds: [],
+    offers: [],
     dateEnd: ``,
     dateStart: ``
   };
@@ -28,8 +28,8 @@ const createDateTemplate = (item) => {
 const createTypeTemplate = (item) => {
   const typeTemplate = waypointTypes.map((element) => {
     return `<div class="event__type-item">
-              <input id="event-type-${element.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${element}" ${element === item ? `checked` : ``}>
-              <label class="event__type-label  event__type-label--${element.toLowerCase()}" for="event-type-${element.toLowerCase()}-1">${element}</label>
+              <input id="event-type-${element}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${element}" ${element === item ? `checked` : ``}>
+              <label class="event__type-label  event__type-label--${element}" for="event-type-${element}-1">${element}</label>
             </div>`;
   });
   return typeTemplate.join(``);
@@ -40,11 +40,11 @@ const createDescriptionTemplate = (items) => {
   <p class="event__destination-description">${items.description}</p>`;
 };
 
-const createOfferEditTemplate = (offers, offersIds) => {
-
-  const offerEditTemplate = offers.map((offer, i) => {
+const createOfferEditTemplate = (offers, allOffers) => {
+  const offersTitles = offers.map((offer) => offer.title);
+  const offerEditTemplate = allOffers.map((offer, i) => {
     return `<div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${offersIds.includes(offer.id) ? `checked` : ``}>
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${i}" type="checkbox" name="event-offer-luggage" ${offersTitles.includes(offer.title) ? `checked` : ``}>
               <label class="event__offer-label" for="event-offer-luggage-${i}">
                 <span class="event__offer-title">${offer.title}</span>
                   &plus;&euro;&nbsp;
@@ -52,12 +52,12 @@ const createOfferEditTemplate = (offers, offersIds) => {
               </label>
             </div>`;
   });
-  return offerEditTemplate.length ? `<section class="event__section  event__section--offers">
+  return `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
               ${offerEditTemplate.join(``)}
             </div>
-          </section>` : ``;
+          </section>`;
 };
 
 const createPhotoTemplate = (items) => {
@@ -79,16 +79,26 @@ const checkDates = (item) => {
   }
 };
 
-const createFormEditingTemplate = (data, offers) => {
+const createOptionTemplate = (destinations) => {
+  const destinationsNames = Object.values(destinations).map((destination) => destination.name);
+  const optionTemplate = destinationsNames.map((type) => {
+    return `<option value="${type}"></option>`;
+  });
 
-  const {type, destination, price, offersIds} = data;
+  return optionTemplate.join(``);
+};
+
+const createFormEditingTemplate = (data, allOffers, destinations) => {
+
+  const {type, destination, price, offers} = data;
 
   const descriptionTemplate = destination.description ? createDescriptionTemplate(destination) : ``;
   const typeTemplate = createTypeTemplate(type);
-  const offerEditTemplate = createOfferEditTemplate(offers[type], offersIds);
+  const offerEditTemplate = allOffers[type] ? createOfferEditTemplate(offers, allOffers[type]) : ``;
   const dateTemplate = createDateTemplate(data);
   const photosTemplate = destination.pictures ? createPhotoTemplate(destination) : ``;
   const isSubmitDisabled = checkDates(data);
+  const optionTemplate = createOptionTemplate(destinations);
 
   return `<li class="trip-events__item">
             <form class="event event--edit" action="#" method="post">
@@ -96,7 +106,7 @@ const createFormEditingTemplate = (data, offers) => {
                 <div class="event__type-wrapper">
                   <label class="event__type  event__type-btn" for="event-type-toggle-1">
                     <span class="visually-hidden">Choose event type</span>
-                    <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+                    <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
                   </label>
                   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
                   <div class="event__type-list">
@@ -112,9 +122,7 @@ const createFormEditingTemplate = (data, offers) => {
                   </label>
                   <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name ? destination.name : ``}" list="destination-list-1" required>
                   <datalist id="destination-list-1">
-                    <option value="Amsterdam"></option>
-                    <option value="Geneva"></option>
-                    <option value="Chamonix"></option>
+                    ${optionTemplate}
                   </datalist>
                 </div>
                 ${dateTemplate}
@@ -293,15 +301,18 @@ export default class FormEditView extends Smart {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    const newOffers = this._offers[this._data.type].slice();
+    const newOffers = this._offers[this._data.type];
     let selectedOffers = [];
-    this.getElement().querySelectorAll(`.event__offer-checkbox`)
+    if (newOffers) {
+      newOffers.slice();
+      this.getElement().querySelectorAll(`.event__offer-checkbox`)
     .forEach((element, i) => {
       if (element.checked) {
-        selectedOffers.push(newOffers[i].id);
+        selectedOffers.push(newOffers[i]);
       }
     });
-    this._data.offersIds = selectedOffers;
+      this._data.offers = selectedOffers;
+    }
     this._callback.formSubmit(FormEditView.parseDataToWaypoint(this._data));
   }
 
