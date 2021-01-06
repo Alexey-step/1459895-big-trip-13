@@ -85,7 +85,7 @@ export default class WaypointsModel extends Observer {
           "base_price": Number(waypoint.price),
           "date_from": waypoint.dateStart,
           "date_to": waypoint.dateEnd,
-          "is_favorite": waypoint.isFavorite
+          "is_favorite": waypoint.isFavorite === undefined ? false : waypoint.isFavorite
         }
     );
 

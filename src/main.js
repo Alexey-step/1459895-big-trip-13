@@ -59,7 +59,6 @@ api.getData().then((data) => {
   waypointsModel.setWaypoints(UpdateType.INIT, data.waypoints);
   destinationsModel.setDestinations(UpdateType.MINOR, data.destinations);
   offersModel.setOffers(UpdateType.MINOR, data.offers);
-  console.log(data.waypoints);
   render(tripMainControlsElement, siteMenuComponent, renderPosition.AFTERBEGIN);
   siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   newWaypointButton.disabled = false;
@@ -72,6 +71,8 @@ api.getData().then((data) => {
 
 newWaypointButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();
-  tripPresenter.createWaypoint();
-  document.querySelector(`.trip-main__event-add-btn`).disabled = true;
+  tripPresenter.createWaypoint(() => {
+    evt.target.disabled = false;
+  });
+  evt.target.disabled = true;
 });
