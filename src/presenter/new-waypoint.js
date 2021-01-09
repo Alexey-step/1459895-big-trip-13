@@ -6,6 +6,7 @@ export default class NewWaypointPresenter {
   constructor(listContainer, changeData, offersModel, destinationsModel) {
     this._listContainer = listContainer;
     this._changeData = changeData;
+    this._disabledCallback = null;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
 

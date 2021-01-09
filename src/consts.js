@@ -76,21 +76,14 @@ const ChartConfigs = {
   PADDING_LEFT: 35
 };
 
-const AUTHORIZATION = `Basic kD3cu7weGaso2fk9z`;
+const AUTHORIZATION = `Basic kD3cu7weGaso2fk94`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
-const Mode = {
-  DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`
-};
-
-const State = {
-  SAVING: `SAVING`,
-  DELETING: `DELETING`,
-  ABORTING: `ABORTING`
-};
-
 const SHAKE_ANIMATION_TIMEOUT = 600;
+
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v13`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 export {
   waypointTypes,
@@ -106,7 +99,6 @@ export {
   ChartConfigs,
   AUTHORIZATION,
   END_POINT,
-  Mode,
-  State,
-  SHAKE_ANIMATION_TIMEOUT
+  SHAKE_ANIMATION_TIMEOUT,
+  STORE_NAME
 };

@@ -37,6 +37,6 @@ export default class RouteInfoView extends Abstract {
   }
 
   getTemplate() {
-    return createRouteInfoTemplate(this._waypoints);
+    return this._waypoints.length === 0 ? `` : createRouteInfoTemplate(this._waypoints);
   }
 }

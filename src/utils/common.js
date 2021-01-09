@@ -98,3 +98,7 @@ export const getTimeSpend = (items, data) => {
   });
   return arr;
 };
+
+export const isOnline = () => {
+  return window.navigator.onLine;
+};
