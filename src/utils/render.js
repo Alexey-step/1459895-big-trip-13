@@ -48,6 +48,10 @@ export const remove = (component) => {
   if (!(component instanceof Abstract)) {
     throw new Error(`Can remove only components`);
   }
+
+  if (!component.getElement()) {
+    return;
+  }
   component.getElement().remove();
   component.removeElement();
 };

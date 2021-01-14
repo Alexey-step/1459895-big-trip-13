@@ -3,9 +3,10 @@ import {remove, render, renderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../consts.js";
 
 export default class NewWaypointPresenter {
-  constructor(listContainer, changeData, offersModel, destinationsModel) {
-    this._listContainer = listContainer;
+  constructor(renderPlace, changeData, offersModel, destinationsModel) {
+    this._listContainer = renderPlace;
     this._changeData = changeData;
+    this._disabledCallback = null;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
 
@@ -29,6 +30,7 @@ export default class NewWaypointPresenter {
     this._waypointEditComponent.setEditCloseClickHandler(this._handleCloseEditClick);
 
     render(this._listContainer, this._waypointEditComponent, renderPosition.AFTERBEGIN);
+    this._waypointEditComponent.setDatepicker();
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
   }

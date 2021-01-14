@@ -1,7 +1,20 @@
 import FormEditView from "../view/form-editing.js";
 import WaypointView from "../view/waypoint.js";
 import {render, renderPosition, replace, remove} from "../utils/render.js";
-import {UserAction, UpdateType, Mode, State} from "../consts.js";
+import {UserAction, UpdateType} from "../consts.js";
+import {isOnline} from "../utils/common.js";
+import {toast} from "../utils/toast/toast.js";
+
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};
+
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
 
 export default class WaypointPresenter {
   constructor(listContainer, changeMode, changeData, offersModel, destinationsModel) {
@@ -11,6 +24,7 @@ export default class WaypointPresenter {
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
 
+    this._waypoint = null;
     this._waypointComponent = null;
     this._formEditComponent = null;
     this._mode = Mode.DEFAULT;
@@ -107,6 +121,10 @@ export default class WaypointPresenter {
   }
 
   _handleEditClick() {
+    if (!isOnline()) {
+      toast(`You can't edit Waypoint offline`);
+      return;
+    }
     this._replaceWaypointToForm();
     this._formEditComponent.reset(this._waypoint);
   }
@@ -117,13 +135,17 @@ export default class WaypointPresenter {
   }
 
   _handleFormSubmit(waypoint) {
+    if (!isOnline()) {
+      toast(`You can't save Waypoint offline`);
+      return;
+    }
     this._changeData(UserAction.UPDATE_WAYPOINT, UpdateType.MINOR, waypoint);
   }
 
   _handleFavoriteClick() {
     this._changeData(
         UserAction.UPDATE_WAYPOINT,
-        UpdateType.MINOR,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._waypoint,
@@ -135,6 +157,10 @@ export default class WaypointPresenter {
   }
 
   _handleDeleteClick(waypoint) {
+    if (!isOnline()) {
+      toast(`You can't delete Waypoint offline`);
+      return;
+    }
     this._changeData(
         UserAction.DELETE_WAYPOINT,
         UpdateType.MINOR,

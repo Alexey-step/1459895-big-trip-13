@@ -2,12 +2,13 @@ import {waypointTypes} from "../consts.js";
 import Smart from "./smart.js";
 import dayjs from "dayjs";
 import flatpickr from "flatpickr";
+import {isOnline} from "../utils/common.js";
 
 import "./../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const getBlank = () => {
   return {
-    type: `Taxi`,
+    type: `taxi`,
     destination: {},
     price: ``,
     offers: [],
@@ -119,7 +120,7 @@ const createFormEditingTemplate = (data, allOffers, destinations) => {
                     <span class="visually-hidden">Choose event type</span>
                     <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
                   </label>
-                  <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+                  <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? isDisabled : ``}>
                   <div class="event__type-list">
                     <fieldset class="event__type-group">
                       <legend class="visually-hidden">Event type</legend>
@@ -129,7 +130,7 @@ const createFormEditingTemplate = (data, allOffers, destinations) => {
                 </div>
                 <div class="event__field-group  event__field-group--destination">
                   <label class="event__label  event__type-output" for="event-destination-1">
-                    ${type !== null ? type : ``}
+                    ${type !== `` ? type : ``}
                   </label>
                   <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name ? destination.name : ``}" list="destination-list-1" required ${isDisabled ? isDisabled : ``}>
                   <datalist id="destination-list-1">
@@ -154,7 +155,7 @@ const createFormEditingTemplate = (data, allOffers, destinations) => {
                 ${offerEditTemplate}
                 <section class="event__section  event__section--destination">
                   ${descriptionTemplate}
-                  ${photosTemplate}
+                  ${isOnline() ? photosTemplate : ``}
                 </section>
               </section>
             </form>
@@ -182,7 +183,6 @@ export default class FormEditView extends Smart {
     this._priceInputHandler = this._priceInputHandler.bind(this);
 
     this._setInnerHandlers();
-    this._setDatepicker();
   }
 
   getTemplate() {
@@ -208,7 +208,8 @@ export default class FormEditView extends Smart {
     );
   }
 
-  _setDatepicker() {
+  setDatepicker() {
+
     if (this._dateStartPicker) {
       this._dateStartPicker.destroy();
       this._dateStartPicker = null;
@@ -291,7 +292,7 @@ export default class FormEditView extends Smart {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this._setDatepicker();
+    this.setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setEditCloseClickHandler(this._callback.editCloseClick);
     this.setDeleteClickHandler(this._callback.deleteClick);

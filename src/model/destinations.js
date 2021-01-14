@@ -24,4 +24,10 @@ export default class DestinationsModel extends Observer {
 
     return adaptedDestination;
   }
+
+  static adaptToServer(destinations) {
+    const adaptedDestination = Object.values(destinations).map((item) => item);
+
+    return adaptedDestination;
+  }
 }

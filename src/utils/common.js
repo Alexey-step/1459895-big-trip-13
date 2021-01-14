@@ -1,4 +1,4 @@
-import {Minutes, FilterType, TimeInMs} from "./../consts.js";
+import {Minutes, FilterType, TimeInMs} from "../consts.js";
 import dayjs from "dayjs";
 
 export const getTimeInfo = (dateEnd, dateStart) => {
@@ -16,7 +16,6 @@ export const getTimeInfo = (dateEnd, dateStart) => {
     minute = minute - hour * Minutes.IN_HOUR;
     timeStr = `${hour}H ${minute}M`;
   } else if (minute > 0 && minute < Minutes.IN_HOUR) {
-    minute = minute;
     timeStr = `${minute}M`;
   }
   return timeStr;
@@ -97,4 +96,8 @@ export const getTimeSpend = (items, data) => {
     sum = 0;
   });
   return arr;
+};
+
+export const isOnline = () => {
+  return window.navigator.onLine;
 };

@@ -24,4 +24,15 @@ export default class OffersModel extends Observer {
 
     return adaptedOffers;
   }
+
+  static adaptToServer(offers) {
+    const adaptedOffers = Object.keys(offers).map((offer, i) => {
+      return {
+        type: offer,
+        offers: Object.values(offers)[i]
+      };
+    });
+
+    return adaptedOffers;
+  }
 }
