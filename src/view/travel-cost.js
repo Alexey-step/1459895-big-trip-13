@@ -1,10 +1,8 @@
 import Abstract from "./abstract.js";
 
 const getOffersCost = (waypoints) => {
-  let waypointsOffersPrice = [];
-  let offersCost = 0;
-  waypointsOffersPrice = waypoints.map((waypoint) => waypoint.offers.reduce((acc, offer) => acc + offer.price, 0));
-  offersCost = waypointsOffersPrice.reduce((acc, price) => acc + price, 0);
+  const waypointsOffersPrice = waypoints.map((waypoint) => waypoint.offers.reduce((acc, offer) => acc + offer.price, 0));
+  const offersCost = waypointsOffersPrice.reduce((acc, price) => acc + price, 0);
   return offersCost;
 };
 

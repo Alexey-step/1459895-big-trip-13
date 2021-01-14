@@ -145,7 +145,7 @@ export default class WaypointPresenter {
   _handleFavoriteClick() {
     this._changeData(
         UserAction.UPDATE_WAYPOINT,
-        UpdateType.MINOR,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._waypoint,

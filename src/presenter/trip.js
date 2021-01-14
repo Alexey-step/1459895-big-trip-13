@@ -7,7 +7,7 @@ import WaypointPresenter, {State as WaypointPresenterViewState} from "./waypoint
 import LoadingView from "../view/loading.js";
 import NewWaypointPresenter from "./new-waypoint.js";
 import {render, renderPosition, remove} from "../utils/render.js";
-import {sortWaypointsByTime, filter} from "../../src/utils/common.js";
+import {sortWaypointsByTime, filter} from "../utils/common.js";
 import {SortType, UpdateType, UserAction, FilterType} from "../consts.js";
 
 export default class TripPresenter {
@@ -71,17 +71,17 @@ export default class TripPresenter {
   _getWaypoints() {
     const filterType = this._filterModel.getFilter();
     const waypoints = this._waypointsModel.getWaypoints();
-    const filtredWaypoints = filter[filterType](waypoints);
+    const filteredWaypoints = filter[filterType](waypoints);
 
     switch (this._currentSortType) {
       case SortType.PRICE:
-        return filtredWaypoints.sort((a, b) => b.price - a.price);
+        return filteredWaypoints.sort((a, b) => b.price - a.price);
       case SortType.TIME:
-        return filtredWaypoints.sort(sortWaypointsByTime);
+        return filteredWaypoints.sort(sortWaypointsByTime);
       case SortType.DAY:
-        return filtredWaypoints.sort((a, b) => a.dateStart - b.dateStart);
+        return filteredWaypoints.sort((a, b) => a.dateStart - b.dateStart);
     }
-    return filtredWaypoints;
+    return filteredWaypoints;
   }
 
   _renderList() {
@@ -96,6 +96,7 @@ export default class TripPresenter {
     const waypoints = this._getWaypoints();
 
     if (waypoints.length === 0) {
+      this._renderList();
       this._renderNoWaypoints();
     } else {
       this._renderSort();

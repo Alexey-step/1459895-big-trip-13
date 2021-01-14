@@ -5,7 +5,7 @@ import {isOnline} from "../utils/common.js";
 
 const getSyncedWaypoints = (items) => {
   return items.filter(({success}) => success)
-  .map(({payload}) => payload.waypoint);
+  .map(({payload}) => payload.point);
 };
 
 const createStoreStructure = (items) => {
@@ -135,11 +135,10 @@ export default class Provider {
 
       return this._api.sync(storeWaypoints)
         .then((response) => {
-          const createdWaypoints = getSyncedWaypoints(response.created);
+          const createdWaypoints = response.created;
           const updatedWaypoints = getSyncedWaypoints(response.updated);
 
           const items = createStoreStructure([...createdWaypoints, ...updatedWaypoints]);
-
           this._store.setItems(items);
         });
     }

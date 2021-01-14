@@ -11,16 +11,6 @@ const waypointTypes = [
   `restaurant`
 ];
 
-const TimeHours = {
-  MIN: 0,
-  MAX: 24
-};
-
-const TimeMinutes = {
-  MIN: 0,
-  MAX: 60
-};
-
 const Minutes = {
   IN_DAY: 1440,
   IN_HOUR: 60
@@ -76,7 +66,7 @@ const ChartConfigs = {
   PADDING_LEFT: 35
 };
 
-const AUTHORIZATION = `Basic kD3cu7weGaso2fk94`;
+const AUTHORIZATION = `Basic kD3cu7weGaso2fk85`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -87,8 +77,6 @@ const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 export {
   waypointTypes,
-  TimeHours,
-  TimeMinutes,
   Minutes,
   SortType,
   UserAction,
