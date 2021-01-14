@@ -66,7 +66,7 @@ const ChartConfigs = {
   PADDING_LEFT: 35
 };
 
-const AUTHORIZATION = `Basic kD3cu7weGaso2fk85`;
+const AUTHORIZATION = `Basic kD3cu7weGaso2fk86`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
