@@ -1,8 +1,8 @@
 import FormEditView from "../view/form-editing.js";
 import WaypointView from "../view/waypoint.js";
 import {render, renderPosition, replace, remove} from "../utils/render.js";
-import {UserAction, UpdateType} from "../consts.js";
-import {isOnline} from "../utils/common.js";
+import {UserAction, UpdateType, SortType} from "../consts.js";
+import {isOnline, isDifferentTime} from "../utils/common.js";
 import {toast} from "../utils/toast/toast.js";
 
 const Mode = {
@@ -17,12 +17,13 @@ export const State = {
 };
 
 export default class WaypointPresenter {
-  constructor(listContainer, changeMode, changeData, offersModel, destinationsModel) {
+  constructor(listContainer, changeMode, changeData, offersModel, destinationsModel, currentSortType) {
     this._listComponent = listContainer;
     this._changeMode = changeMode;
     this._changeData = changeData;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
+    this._currentSortType = currentSortType;
 
     this._waypoint = null;
     this._waypointComponent = null;
@@ -43,14 +44,14 @@ export default class WaypointPresenter {
     const prevWaypointComponent = this._waypointComponent;
     const prevFormEditComponent = this._formEditComponent;
 
-    this._waypointComponent = new WaypointView(waypoint);
+    this._waypointComponent = new WaypointView(this._waypoint);
     this._formEditComponent = new FormEditView(this._offersModel, this._destinationsModel, waypoint);
 
     this._waypointComponent.setEditClickHandler(this._handleEditClick);
+    this._waypointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._formEditComponent.setEditCloseClickHandler(this._handleCloseEditClick);
     this._formEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._formEditComponent.setDeleteClickHandler(this._handleDeleteClick);
-    this._waypointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevWaypointComponent === null || prevFormEditComponent === null) {
       render(this._listComponent, this._waypointComponent, renderPosition.BEFOREEND);
@@ -109,6 +110,7 @@ export default class WaypointPresenter {
   _replaceFormToWaypoint() {
     replace(this._waypointComponent, this._formEditComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    this._formEditComponent.removeDatepicker();
     this._mode = Mode.DEFAULT;
   }
 
@@ -126,7 +128,7 @@ export default class WaypointPresenter {
       return;
     }
     this._replaceWaypointToForm();
-    this._formEditComponent.reset(this._waypoint);
+    this._formEditComponent.setDatepicker();
   }
 
   _handleCloseEditClick() {
@@ -139,7 +141,17 @@ export default class WaypointPresenter {
       toast(`You can't save Waypoint offline`);
       return;
     }
-    this._changeData(UserAction.UPDATE_WAYPOINT, UpdateType.MINOR, waypoint);
+
+    const isMinorUpdate =
+      (this._currentSortType === SortType.DAY && this._waypoint.dateStart !== waypoint.dateStart) ||
+      (this._currentSortType === SortType.PRICE && this._waypoint.price !== waypoint.price) ||
+      (this._currentSortType === SortType.TIME && isDifferentTime(this._waypoint, waypoint));
+
+    this._changeData(
+        UserAction.UPDATE_WAYPOINT,
+        isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+        waypoint
+    );
   }
 
   _handleFavoriteClick() {
