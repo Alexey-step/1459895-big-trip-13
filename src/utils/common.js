@@ -102,9 +102,13 @@ export const isOnline = () => {
   return window.navigator.onLine;
 };
 
-export const isDifferentTime = (a, b) => {
-  const differentTimeA = a.dateEnd.diff(a.dateStart);
-  const differentTimeB = b.dateEnd.diff(b.dateStart);
+const getTimeDifference = (items) => {
+  return items.dateEnd.diff(items.dateStart);
+};
 
-  return (differentTimeA - differentTimeB) !== 0 ? true : false;
+export const isEqual = (a, b) => {
+  const differentTimeA = getTimeDifference(a);
+  const differentTimeB = getTimeDifference(b);
+
+  return differentTimeA === differentTimeB ? true : false;
 };

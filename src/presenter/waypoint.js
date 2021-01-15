@@ -2,7 +2,7 @@ import FormEditView from "../view/form-editing.js";
 import WaypointView from "../view/waypoint.js";
 import {render, renderPosition, replace, remove} from "../utils/render.js";
 import {UserAction, UpdateType, SortType} from "../consts.js";
-import {isOnline, isDifferentTime} from "../utils/common.js";
+import {isOnline, isEqual} from "../utils/common.js";
 import {toast} from "../utils/toast/toast.js";
 
 const Mode = {
@@ -145,7 +145,7 @@ export default class WaypointPresenter {
     const isMinorUpdate =
       (this._currentSortType === SortType.DAY && this._waypoint.dateStart !== waypoint.dateStart) ||
       (this._currentSortType === SortType.PRICE && this._waypoint.price !== waypoint.price) ||
-      (this._currentSortType === SortType.TIME && isDifferentTime(this._waypoint, waypoint));
+      (this._currentSortType === SortType.TIME && isEqual(this._waypoint, waypoint));
 
     this._changeData(
         UserAction.UPDATE_WAYPOINT,
