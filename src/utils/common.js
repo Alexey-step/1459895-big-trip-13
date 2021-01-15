@@ -54,7 +54,7 @@ export const makeUniqWaypointTypes = (items) => {
 };
 
 export const getTypesCost = (items, data) => {
-  let arr = [];
+  let itemsCosts = [];
   let sum = 0;
   items.forEach((item) => {
     data.forEach((point) => {
@@ -62,40 +62,40 @@ export const getTypesCost = (items, data) => {
         sum += point.price;
       }
     });
-    arr.push(sum);
+    itemsCosts.push(sum);
     sum = 0;
   });
-  return arr;
+  return itemsCosts;
 };
 
 export const getTypesCount = (items, data) => {
-  let arr = [];
-  let sum = 0;
+  let itemsTypesCount = [];
+  let count = 0;
   items.forEach((item) => {
     data.forEach((point) => {
       if (point.type === item) {
-        sum++;
+        count++;
       }
     });
-    arr.push(sum);
-    sum = 0;
+    itemsTypesCount.push(count);
+    count = 0;
   });
-  return arr;
+  return itemsTypesCount;
 };
 
 export const getTimeSpend = (items, data) => {
-  let arr = [];
-  let sum = 0;
+  let itemsTimes = [];
+  let time = 0;
   items.forEach((item) => {
     data.forEach((point) => {
       if (point.type === item) {
-        sum += (point.dateEnd.diff(point.dateStart)) / TimeInMs.DAY;
+        time += (point.dateEnd.diff(point.dateStart)) / TimeInMs.DAY;
       }
     });
-    arr.push(Math.round(sum));
-    sum = 0;
+    itemsTimes.push(Math.round(time));
+    time = 0;
   });
-  return arr;
+  return itemsTimes;
 };
 
 export const isOnline = () => {
