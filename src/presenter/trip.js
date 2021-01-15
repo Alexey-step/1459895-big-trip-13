@@ -182,7 +182,7 @@ export default class TripPresenter {
   }
 
   _renderWaypoint(waypoint) {
-    const pointPresenter = new WaypointPresenter(this._listComponent, this._handleModeChange, this._handleViewAction, this._offersModel, this._destinationsModel);
+    const pointPresenter = new WaypointPresenter(this._listComponent, this._handleModeChange, this._handleViewAction, this._offersModel, this._destinationsModel, this._currentSortType);
     pointPresenter.init(waypoint);
     this._waypointPresenter[waypoint.id] = pointPresenter;
   }

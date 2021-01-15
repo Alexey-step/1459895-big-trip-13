@@ -101,3 +101,14 @@ export const getTimeSpend = (items, data) => {
 export const isOnline = () => {
   return window.navigator.onLine;
 };
+
+const getTimeDifference = (items) => {
+  return items.dateEnd.diff(items.dateStart);
+};
+
+export const isEqual = (a, b) => {
+  const differentTimeA = getTimeDifference(a);
+  const differentTimeB = getTimeDifference(b);
+
+  return differentTimeA === differentTimeB;
+};

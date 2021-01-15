@@ -191,7 +191,10 @@ export default class FormEditView extends Smart {
 
   removeElement() {
     super.removeElement();
+    this.removeDatepicker();
+  }
 
+  removeDatepicker() {
     if (this._dateStartPicker) {
       this._dateStartPicker.destroy();
       this._dateStartPicker = null;

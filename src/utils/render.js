@@ -42,16 +42,13 @@ export const replace = (newChild, oldChild) => {
 };
 
 export const remove = (component) => {
-  if (component === null) {
+  if (component === null || !component.getElement()) {
     return;
   }
   if (!(component instanceof Abstract)) {
     throw new Error(`Can remove only components`);
   }
 
-  if (!component.getElement()) {
-    return;
-  }
   component.getElement().remove();
   component.removeElement();
 };
