@@ -329,7 +329,7 @@ export default class FormEditView extends Smart {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     const newOffers = this._offers[this._data.type];
-    let selectedOffers = [];
+    const selectedOffers = [];
     if (newOffers) {
       newOffers.slice();
       this.getElement().querySelectorAll(`.event__offer-checkbox`)
