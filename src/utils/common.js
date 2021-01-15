@@ -48,13 +48,13 @@ export const filter = {
 };
 
 export const makeUniqWaypointTypes = (items) => {
-  let arr = [];
-  items.forEach((item) => arr.push(item.type));
-  return [...new Set(arr)];
+  const uniqs = [];
+  items.forEach((item) => uniqs.push(item.type));
+  return [...new Set(uniqs)];
 };
 
 export const getTypesCost = (items, data) => {
-  let itemsCosts = [];
+  const itemsCosts = [];
   let sum = 0;
   items.forEach((item) => {
     data.forEach((point) => {
@@ -69,7 +69,7 @@ export const getTypesCost = (items, data) => {
 };
 
 export const getTypesCount = (items, data) => {
-  let itemsTypesCount = [];
+  const itemsTypesCount = [];
   let count = 0;
   items.forEach((item) => {
     data.forEach((point) => {
@@ -84,7 +84,7 @@ export const getTypesCount = (items, data) => {
 };
 
 export const getTimeSpend = (items, data) => {
-  let itemsTimes = [];
+  const itemsTimes = [];
   let time = 0;
   items.forEach((item) => {
     data.forEach((point) => {
