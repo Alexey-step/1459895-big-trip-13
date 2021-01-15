@@ -145,7 +145,7 @@ export default class WaypointPresenter {
     const isMinorUpdate =
       (this._currentSortType === SortType.DAY && this._waypoint.dateStart !== waypoint.dateStart) ||
       (this._currentSortType === SortType.PRICE && this._waypoint.price !== waypoint.price) ||
-      (this._currentSortType === SortType.TIME && isEqual(this._waypoint, waypoint));
+      (this._currentSortType === SortType.TIME && !isEqual(this._waypoint, waypoint));
 
     this._changeData(
         UserAction.UPDATE_WAYPOINT,

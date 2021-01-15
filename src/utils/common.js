@@ -110,5 +110,5 @@ export const isEqual = (a, b) => {
   const differentTimeA = getTimeDifference(a);
   const differentTimeB = getTimeDifference(b);
 
-  return differentTimeA === differentTimeB ? true : false;
+  return differentTimeA === differentTimeB;
 };
