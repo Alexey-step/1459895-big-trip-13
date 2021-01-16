@@ -6,7 +6,7 @@ const createEventsBoardTemplate = () => {
           </section>`;
 };
 
-export default class TripEventsBoardView extends Smart {
+export default class TripEventsBoard extends Smart {
 
   getTemplate() {
     return createEventsBoardTemplate();

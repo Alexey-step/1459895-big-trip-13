@@ -1,5 +1,5 @@
 import MenuView from "./view/menu.js";
-import {remove, render, renderPosition} from "./utils/render.js";
+import {remove, render, RenderPosition} from "./utils/render.js";
 import WaypointsModel from "./model/waypoints.js";
 import FilterModel from "./model/filter.js";
 import OffersModel from "./model/offers.js";
@@ -36,7 +36,7 @@ const tripPresenter = new TripPresenter(tripMainElement, tripEventsBoardComponen
 
 let statisticsView = null;
 
-render(pageBodyContainer, tripEventsBoardComponent, renderPosition.BEFOREEND);
+render(pageBodyContainer, tripEventsBoardComponent, RenderPosition.BEFOREEND);
 
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -49,7 +49,7 @@ const handleSiteMenuClick = (menuItem) => {
     case MenuItem.STATS:
       siteMenuComponent.setMenuItem(menuItem);
       statisticsView = new StatisticsView(waypointsModel);
-      render(pageBodyContainer, statisticsView, renderPosition.BEFOREEND);
+      render(pageBodyContainer, statisticsView, RenderPosition.BEFOREEND);
       tripPresenter.hide();
       statisticsView.show();
       break;
@@ -65,13 +65,13 @@ apiWithProvider.getData().then((data) => {
   waypointsModel.setWaypoints(UpdateType.INIT, data.waypoints);
   destinationsModel.setDestinations(UpdateType.MINOR, data.destinations);
   offersModel.setOffers(UpdateType.MINOR, data.offers);
-  render(tripMainControlsElement, siteMenuComponent, renderPosition.AFTERBEGIN);
+  render(tripMainControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
   siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   newWaypointButton.disabled = false;
 })
 .catch(() => {
   waypointsModel.setWaypoints(UpdateType.INIT, []);
-  render(tripMainControlsElement, siteMenuComponent, renderPosition.AFTERBEGIN);
+  render(tripMainControlsElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
   siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   newWaypointButton.disabled = false;
 });

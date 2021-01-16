@@ -1,4 +1,4 @@
-import {waypointTypes} from "../consts.js";
+import {waypointTypes, DateFormat} from "../consts.js";
 import Smart from "./smart.js";
 import dayjs from "dayjs";
 import flatpickr from "flatpickr";
@@ -8,7 +8,7 @@ import "./../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const getBlank = () => {
   return {
-    type: `taxi`,
+    type: waypointTypes[0],
     destination: {},
     price: ``,
     offers: [],
@@ -21,9 +21,9 @@ const getBlank = () => {
 const createDateTemplate = (item, isDisabled) => {
   return `<div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${item.dateStart ? item.dateStart.format(`DD/MM/YY HH:mm`) : ``}" ${isDisabled ? isDisabled : ``}>&mdash;
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${item.dateStart ? item.dateStart.format(DateFormat.EDIT) : ``}" ${isDisabled ? isDisabled : ``}>&mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${item.dateEnd ? item.dateEnd.format(`DD/MM/YY HH:mm`) : ``}" ${isDisabled ? isDisabled : ``}>
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${item.dateEnd ? item.dateEnd.format(DateFormat.EDIT) : ``}" ${isDisabled ? isDisabled : ``}>
           </div>`;
 };
 
@@ -162,14 +162,14 @@ const createFormEditingTemplate = (data, allOffers, destinations) => {
           </li>`;
 };
 
-export default class FormEditView extends Smart {
+export default class FormEdit extends Smart {
   constructor(offersModel, destinationsModel, waypoint = getBlank()) {
     super();
 
     this._offers = offersModel.getOffers();
     this._destinations = destinationsModel.getDestinations();
 
-    this._data = FormEditView.parseWaypointToData(waypoint);
+    this._data = FormEdit.parseWaypointToData(waypoint);
     this._dateStartPicker = null;
     this._dateEndPicker = null;
 
@@ -207,7 +207,7 @@ export default class FormEditView extends Smart {
 
   reset(waypoint) {
     this.updateData(
-        FormEditView.parseWaypointToData(waypoint)
+        FormEdit.parseWaypointToData(waypoint)
     );
   }
 
@@ -226,7 +226,7 @@ export default class FormEditView extends Smart {
         this.getElement().querySelector(`#event-start-time-1`),
         {
           enableTime: true,
-          dateFormat: `d/m/y H:i`,
+          dateFormat: DateFormat.FLATPICKR,
           dateDefault: this._data.dateStart,
           defaultDate: `${this._data.dateStart}`,
           onChange: this._dateStartChangeHandler
@@ -237,7 +237,7 @@ export default class FormEditView extends Smart {
         this.getElement().querySelector(`#event-end-time-1`),
         {
           enableTime: true,
-          dateFormat: `d/m/y H:i`,
+          dateFormat: DateFormat.FLATPICKR,
           minDate: `${this._data.dateStart}`,
           dateDefault: this._data.dateEnd,
           defaultDate: `${this._data.dateEnd}`,
@@ -340,12 +340,12 @@ export default class FormEditView extends Smart {
     });
       this._data.offers = selectedOffers;
     }
-    this._callback.formSubmit(FormEditView.parseDataToWaypoint(this._data));
+    this._callback.formSubmit(FormEdit.parseDataToWaypoint(this._data));
   }
 
   _formDeleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick(FormEditView.parseDataToWaypoint(this._data));
+    this._callback.deleteClick(FormEdit.parseDataToWaypoint(this._data));
   }
 
   setDeleteClickHandler(callback) {

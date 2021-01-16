@@ -1,4 +1,5 @@
 import Abstract from "./abstract.js";
+import {DateFormat} from "../consts.js";
 
 const getRouteInfo = (items) => {
   let destinationStr = `${items[0].destination.name}`;
@@ -13,7 +14,7 @@ const getRouteInfo = (items) => {
 };
 
 const createRouteDateTemplate = (items) => {
-  return `<p class="trip-info__dates">${items[0].dateStart.format(`DD MMM`)}&nbsp;&mdash;&nbsp;${items[items.length - 1].dateStart.format(`DD MMM`)}</p>`;
+  return `<p class="trip-info__dates">${items[0].dateStart.format(DateFormat.ROUT_INFO)}&nbsp;&mdash;&nbsp;${items[items.length - 1].dateEnd.format(DateFormat.ROUT_INFO)}</p>`;
 };
 
 const createRouteInfoTemplate = (items) => {
@@ -29,7 +30,7 @@ const createRouteInfoTemplate = (items) => {
           </section>`;
 };
 
-export default class RouteInfoView extends Abstract {
+export default class RouteInfo extends Abstract {
   constructor(waypoints) {
     super();
 

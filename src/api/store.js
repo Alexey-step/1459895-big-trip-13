@@ -1,9 +1,13 @@
+const StoreKey = {
+  OFFERS: `offers`,
+  DESTINATIONS: `destinations`
+};
 export default class Store {
   constructor(key, storage) {
     this._storeKey = key;
     this._storage = storage;
-    this._storeOffersKey = `offers`;
-    this._storeDestinationsKey = `destinations`;
+    this._storeOffersKey = StoreKey.OFFERS;
+    this._storeDestinationsKey = StoreKey.DESTINATIONS;
   }
 
   getItems() {

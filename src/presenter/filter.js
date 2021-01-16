@@ -1,8 +1,8 @@
 import FilterView from "../view/filters.js";
 import {UpdateType} from "../consts.js";
-import {render, renderPosition, replace, remove} from "../utils/render.js";
+import {render, RenderPosition, replace, remove} from "../utils/render.js";
 
-export default class FilterPresenter {
+export default class Filter {
   constructor(filterContainer, filterModel, waypointsModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
@@ -28,7 +28,7 @@ export default class FilterPresenter {
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, renderPosition.BEFOREEND);
+      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
       return;
     }
 

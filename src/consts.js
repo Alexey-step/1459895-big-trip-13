@@ -66,6 +66,18 @@ const ChartConfigs = {
   PADDING_LEFT: 35
 };
 
+const DateFormat = {
+  EVENT_DATE: `D MMM`,
+  FLATPICKR: `d/m/y H:i`,
+  ROUT_INFO: `DD MMM`,
+  EDIT: `DD/MM/YY HH:mm`
+};
+
+const ButtonKey = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`
+};
+
 const AUTHORIZATION = `Basic kD3cu7weGaso2fk86`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
@@ -88,5 +100,7 @@ export {
   AUTHORIZATION,
   END_POINT,
   SHAKE_ANIMATION_TIMEOUT,
-  STORE_NAME
+  STORE_NAME,
+  DateFormat,
+  ButtonKey
 };

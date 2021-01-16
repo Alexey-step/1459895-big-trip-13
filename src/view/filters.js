@@ -2,24 +2,13 @@ import Abstract from "./abstract.js";
 import {FilterType} from "../consts.js";
 import dayjs from "dayjs";
 
+
 const getPastWaypoints = (items) => {
-  let sum = 0;
-  items.forEach((item) => {
-    if (item.dateStart < dayjs()) {
-      sum++;
-    }
-  });
-  return sum === 0 ? `disabled` : ``;
+  return items.some((item) => item.dateStart < dayjs()) ? `` : `disabled`;
 };
 
 const getFutureWaypoints = (items) => {
-  let sum = 0;
-  items.forEach((item) => {
-    if (item.dateStart > dayjs()) {
-      sum++;
-    }
-  });
-  return sum === 0 ? `disabled` : ``;
+  return items.some((item) => item.dateStart > dayjs()) ? `` : `disabled`;
 };
 
 const createFiltersTemplate = (waypoints, currentFilterType) => {
@@ -47,7 +36,7 @@ const createFiltersTemplate = (waypoints, currentFilterType) => {
           </form>`;
 };
 
-export default class FilterView extends Abstract {
+export default class Filter extends Abstract {
   constructor(waypoints, currentFilterType) {
     super();
 

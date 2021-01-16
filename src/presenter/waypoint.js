@@ -1,7 +1,7 @@
 import FormEditView from "../view/form-editing.js";
 import WaypointView from "../view/waypoint.js";
-import {render, renderPosition, replace, remove} from "../utils/render.js";
-import {UserAction, UpdateType, SortType} from "../consts.js";
+import {render, RenderPosition, replace, remove} from "../utils/render.js";
+import {UserAction, UpdateType, SortType, ButtonKey} from "../consts.js";
 import {isOnline, isEqual} from "../utils/common.js";
 import {toast} from "../utils/toast/toast.js";
 
@@ -15,8 +15,7 @@ export const State = {
   DELETING: `DELETING`,
   ABORTING: `ABORTING`
 };
-
-export default class WaypointPresenter {
+export default class Waypoint {
   constructor(listContainer, changeMode, changeData, offersModel, destinationsModel, currentSortType) {
     this._listComponent = listContainer;
     this._changeMode = changeMode;
@@ -54,7 +53,7 @@ export default class WaypointPresenter {
     this._formEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevWaypointComponent === null || prevFormEditComponent === null) {
-      render(this._listComponent, this._waypointComponent, renderPosition.BEFOREEND);
+      render(this._listComponent, this._waypointComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -115,7 +114,7 @@ export default class WaypointPresenter {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.key === ButtonKey.ESCAPE || evt.key === ButtonKey.ESC) {
       evt.preventDefault();
       this._formEditComponent.reset(this._waypoint);
       this._replaceFormToWaypoint();
@@ -143,8 +142,9 @@ export default class WaypointPresenter {
     }
 
     const isMinorUpdate =
-      (this._currentSortType === SortType.DAY && this._waypoint.dateStart !== waypoint.dateStart) ||
-      (this._currentSortType === SortType.PRICE && this._waypoint.price !== waypoint.price) ||
+      this._waypoint.destination.name !== waypoint.destination.name ||
+      this._waypoint.dateStart !== waypoint.dateStart ||
+      this._waypoint.price !== waypoint.price ||
       (this._currentSortType === SortType.TIME && !isEqual(this._waypoint, waypoint));
 
     this._changeData(

@@ -8,7 +8,7 @@ const createMenuTemplate = () => {
           </nav>`;
 };
 
-export default class MenuView extends Abstract {
+export default class Menu extends Abstract {
   constructor() {
     super();
 

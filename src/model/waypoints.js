@@ -1,7 +1,7 @@
 import Observer from "../utils/observer.js";
 import dayjs from "dayjs";
 
-export default class WaypointsModel extends Observer {
+export default class Waypoints extends Observer {
   constructor() {
     super();
     this._waypoints = [];

@@ -21,7 +21,7 @@ const createTravelCostTemplate = (waypoints) => {
           </p>`;
 };
 
-export default class TravelCostView extends Abstract {
+export default class TravelCost extends Abstract {
   constructor(waypoints) {
     super();
     this._waypoints = waypoints;

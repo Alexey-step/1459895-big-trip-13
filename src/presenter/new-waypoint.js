@@ -1,8 +1,8 @@
 import FormEditView from "../view/form-editing.js";
-import {remove, render, renderPosition} from "../utils/render.js";
-import {UserAction, UpdateType} from "../consts.js";
+import {remove, render, RenderPosition} from "../utils/render.js";
+import {UserAction, UpdateType, ButtonKey} from "../consts.js";
 
-export default class NewWaypointPresenter {
+export default class NewWaypoint {
   constructor(renderPlace, changeData, offersModel, destinationsModel) {
     this._listContainer = renderPlace;
     this._changeData = changeData;
@@ -29,7 +29,7 @@ export default class NewWaypointPresenter {
     this._waypointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._waypointEditComponent.setEditCloseClickHandler(this._handleCloseEditClick);
 
-    render(this._listContainer, this._waypointEditComponent, renderPosition.AFTERBEGIN);
+    render(this._listContainer, this._waypointEditComponent, RenderPosition.AFTERBEGIN);
     this._waypointEditComponent.setDatepicker();
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
@@ -67,7 +67,7 @@ export default class NewWaypointPresenter {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === `Esc` || evt.key === `Escape`) {
+    if (evt.key === ButtonKey.ESC || evt.key === ButtonKey.ESCAPE) {
       evt.preventDefault();
       this.destroy();
     }
